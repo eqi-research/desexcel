@@ -454,78 +454,93 @@
   .log-status.ok::before    { content: '●'; color: var(--verde); margin-right: 6px; }
   .log-status.fail::before  { content: '●'; color: var(--warn);  margin-right: 6px; }
 
-  /* ─── PDF TEMPLATE (offscreen, usado pelo html2pdf) ──────── */
+  /* ─── PDF TEMPLATE (usado pelo html2pdf) ─────────────────── */
+  /* Hex literais (não var()) porque html2canvas pode não resolver custom properties */
   .pdf-template {
-    position: absolute;
-    left: -10000px;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 210mm;
     background: #ffffff;
-    color: var(--verde-muito-esc);
-    font-family: var(--ff);
-    padding: 16mm 14mm;
+    color: #00291E;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    padding: 14mm 12mm;
     font-size: 10pt;
     line-height: 1.4;
+    z-index: -9999;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pdf-template.rendering {
+    opacity: 1;
+    z-index: 9999;
   }
   .pdf-template .pdf-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    border-bottom: 2px solid var(--verde);
-    padding-bottom: 12px;
-    margin-bottom: 18px;
+    border-bottom: 2px solid #009E76;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
   }
   .pdf-template .pdf-header .mark {
-    color: var(--verde);
+    color: #009E76;
     font-weight: 700;
-    font-size: 14pt;
+    font-size: 13pt;
     letter-spacing: 0.04em;
   }
   .pdf-template .pdf-header .mark span {
-    color: var(--verde-muito-esc);
+    color: #00291E;
     font-weight: 400;
     margin-left: 6px;
     opacity: 0.7;
   }
   .pdf-template .pdf-header .date {
-    font-size: 9pt;
+    font-size: 8.5pt;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #5a6b66;
   }
   .pdf-template h1 {
-    font-size: 22pt;
+    font-size: 20pt;
     font-weight: 500;
     margin: 0 0 4px;
     letter-spacing: -0.01em;
     line-height: 1.1;
+    color: #00291E;
   }
-  .pdf-template h1 .arrow { color: var(--verde-claro); margin-right: 4px; }
+  .pdf-template h1 .arrow { color: #63C6A5; margin-right: 4px; }
   .pdf-template .pdf-sub {
-    color: var(--muted);
-    font-size: 10pt;
-    margin: 0 0 18px;
+    color: #5a6b66;
+    font-size: 9.5pt;
+    margin: 0 0 14px;
   }
   .pdf-template .pdf-chapeu {
     font-size: 8pt;
     font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--verde);
-    margin: 18px 0 8px;
+    color: #009E76;
+    margin: 14px 0 6px;
   }
   .pdf-template .pdf-row {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 10pt;
+    padding: 5px 0;
+    border-bottom: 1px solid #D9E3E0;
+    font-size: 9.5pt;
   }
   .pdf-template .pdf-row:last-child { border-bottom: none; }
-  .pdf-template .pdf-row .lbl { color: var(--muted); }
-  .pdf-template .pdf-row .val { font-weight: 600; }
-  .pdf-template .pdf-row.hi   { background: var(--neutro-verde); padding: 10px 12px; border-radius: 6px; border: none; margin: 4px 0; }
-  .pdf-template .pdf-row.hi .val { color: var(--verde); font-size: 14pt; font-weight: 700; }
+  .pdf-template .pdf-row .lbl { color: #5a6b66; }
+  .pdf-template .pdf-row .val { font-weight: 600; color: #00291E; }
+  .pdf-template .pdf-row.hi {
+    background: #D9E3E0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: none;
+    margin: 4px 0;
+  }
+  .pdf-template .pdf-row.hi .val { color: #009E76; font-size: 13pt; font-weight: 700; }
   .pdf-template .pdf-rf {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -533,55 +548,56 @@
     margin-top: 8px;
   }
   .pdf-template .pdf-rf-card {
-    border: 1px solid var(--line);
+    border: 1px solid #D9E3E0;
     border-radius: 8px;
     padding: 10px 12px;
   }
   .pdf-template .pdf-rf-card h3 {
     margin: 0 0 6px;
-    font-size: 9pt;
+    font-size: 8.5pt;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--verde);
+    letter-spacing: 0.1em;
+    color: #009E76;
     font-weight: 700;
   }
   .pdf-template .pdf-rf-card .big {
     display: block;
-    font-size: 14pt;
+    font-size: 13pt;
     font-weight: 700;
-    color: var(--verde-muito-esc);
+    color: #00291E;
     margin-top: 4px;
   }
   .pdf-template .pdf-rf-card .line {
     display: flex;
     justify-content: space-between;
-    font-size: 8.5pt;
+    font-size: 8pt;
     padding: 2px 0;
+    color: #00291E;
   }
-  .pdf-template .pdf-rf-card .line span:first-child { color: var(--muted); }
+  .pdf-template .pdf-rf-card .line span:first-child { color: #5a6b66; }
   .pdf-template .pdf-notes {
-    margin-top: 20px;
-    padding: 12px 14px;
-    background: var(--neutro-claro);
-    border-left: 3px solid var(--verde);
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: #F2EDED;
+    border-left: 3px solid #009E76;
     border-radius: 4px;
     font-size: 8.5pt;
-    color: var(--verde-escuro);
+    color: #004031;
   }
   .pdf-template .pdf-notes ul { margin: 4px 0 0; padding-left: 16px; }
   .pdf-template .pdf-notes li { margin: 3px 0; }
   .pdf-template .pdf-footer {
-    margin-top: 24px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #D9E3E0;
     display: flex;
     justify-content: space-between;
-    font-size: 8pt;
+    font-size: 7.5pt;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #5a6b66;
   }
-  .pdf-template .pdf-footer .mark { color: var(--verde); font-weight: 700; }
+  .pdf-template .pdf-footer .mark { color: #009E76; font-weight: 700; }
 
   /* ─── CTA ────────────────────────────────────────────────── */
   .cta {
@@ -994,22 +1010,50 @@ function buildPdfTemplate(payload) {
 async function exportPdf() {
   if (!lastPayload) return;
   const btn = $('btnExportPdf');
+  const tpl = $('pdfTemplate');
   btn.disabled = true;
   const original = btn.innerHTML;
   btn.innerHTML = '<span>↻</span>Gerando PDF...';
   try {
     buildPdfTemplate(lastPayload);
-    await html2pdf().from($('pdfTemplate')).set({
+    // Torna o template visível na viewport (em camada de fundo) pra
+    // o html2canvas conseguir capturar o layout corretamente
+    tpl.classList.add('rendering');
+    // Aguarda 2 frames + load das fontes pra garantir layout final
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => requestAnimationFrame(r));
+    if (document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (_) {}
+    }
+    await html2pdf().from(tpl).set({
       margin:     0,
       filename:   `eqi-calc-imoveis-rf-${new Date().toISOString().slice(0,10)}.pdf`,
       image:      { type: 'jpeg', quality: 0.95 },
-      html2canvas:{ scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      html2canvas:{
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        windowWidth: 794,
+        logging: false,
+        onclone: (clonedDoc) => {
+          // Garante que o template fica em posição normal no DOM clonado
+          const clonedTpl = clonedDoc.getElementById('pdfTemplate');
+          if (clonedTpl) {
+            clonedTpl.style.position = 'static';
+            clonedTpl.style.opacity = '1';
+            clonedTpl.style.zIndex = 'auto';
+            clonedTpl.style.left = 'auto';
+            clonedTpl.style.top = 'auto';
+          }
+        }
+      },
       jsPDF:      { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).save();
   } catch (err) {
     console.error('[desexcel] falha PDF:', err);
     alert('Não foi possível gerar o PDF agora. Tente recarregar a página.');
   } finally {
+    tpl.classList.remove('rendering');
     btn.disabled = false;
     btn.innerHTML = original;
   }
