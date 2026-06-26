@@ -454,151 +454,6 @@
   .log-status.ok::before    { content: '●'; color: var(--verde); margin-right: 6px; }
   .log-status.fail::before  { content: '●'; color: var(--warn);  margin-right: 6px; }
 
-  /* ─── PDF TEMPLATE (usado pelo html2pdf) ─────────────────── */
-  /* Hex literais (não var()) porque html2canvas pode não resolver custom properties */
-  .pdf-template {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 210mm;
-    background: #ffffff;
-    color: #00291E;
-    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    padding: 14mm 12mm;
-    font-size: 10pt;
-    line-height: 1.4;
-    z-index: -9999;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .pdf-template.rendering {
-    opacity: 1;
-    z-index: 9999;
-  }
-  .pdf-template .pdf-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 2px solid #009E76;
-    padding-bottom: 10px;
-    margin-bottom: 14px;
-  }
-  .pdf-template .pdf-header .mark {
-    color: #009E76;
-    font-weight: 700;
-    font-size: 13pt;
-    letter-spacing: 0.04em;
-  }
-  .pdf-template .pdf-header .mark span {
-    color: #00291E;
-    font-weight: 400;
-    margin-left: 6px;
-    opacity: 0.7;
-  }
-  .pdf-template .pdf-header .date {
-    font-size: 8.5pt;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #5a6b66;
-  }
-  .pdf-template h1 {
-    font-size: 20pt;
-    font-weight: 500;
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    color: #00291E;
-  }
-  .pdf-template h1 .arrow { color: #63C6A5; margin-right: 4px; }
-  .pdf-template .pdf-sub {
-    color: #5a6b66;
-    font-size: 9.5pt;
-    margin: 0 0 14px;
-  }
-  .pdf-template .pdf-chapeu {
-    font-size: 8pt;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: #009E76;
-    margin: 14px 0 6px;
-  }
-  .pdf-template .pdf-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #D9E3E0;
-    font-size: 9.5pt;
-  }
-  .pdf-template .pdf-row:last-child { border-bottom: none; }
-  .pdf-template .pdf-row .lbl { color: #5a6b66; }
-  .pdf-template .pdf-row .val { font-weight: 600; color: #00291E; }
-  .pdf-template .pdf-row.hi {
-    background: #D9E3E0;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: none;
-    margin: 4px 0;
-  }
-  .pdf-template .pdf-row.hi .val { color: #009E76; font-size: 13pt; font-weight: 700; }
-  .pdf-template .pdf-rf {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .pdf-template .pdf-rf-card {
-    border: 1px solid #D9E3E0;
-    border-radius: 8px;
-    padding: 10px 12px;
-  }
-  .pdf-template .pdf-rf-card h3 {
-    margin: 0 0 6px;
-    font-size: 8.5pt;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #009E76;
-    font-weight: 700;
-  }
-  .pdf-template .pdf-rf-card .big {
-    display: block;
-    font-size: 13pt;
-    font-weight: 700;
-    color: #00291E;
-    margin-top: 4px;
-  }
-  .pdf-template .pdf-rf-card .line {
-    display: flex;
-    justify-content: space-between;
-    font-size: 8pt;
-    padding: 2px 0;
-    color: #00291E;
-  }
-  .pdf-template .pdf-rf-card .line span:first-child { color: #5a6b66; }
-  .pdf-template .pdf-notes {
-    margin-top: 16px;
-    padding: 10px 14px;
-    background: #F2EDED;
-    border-left: 3px solid #009E76;
-    border-radius: 4px;
-    font-size: 8.5pt;
-    color: #004031;
-  }
-  .pdf-template .pdf-notes ul { margin: 4px 0 0; padding-left: 16px; }
-  .pdf-template .pdf-notes li { margin: 3px 0; }
-  .pdf-template .pdf-footer {
-    margin-top: 20px;
-    padding-top: 10px;
-    border-top: 1px solid #D9E3E0;
-    display: flex;
-    justify-content: space-between;
-    font-size: 7.5pt;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #5a6b66;
-  }
-  .pdf-template .pdf-footer .mark { color: #009E76; font-weight: 700; }
-
   /* ─── CTA ────────────────────────────────────────────────── */
   .cta {
     background: var(--verde);
@@ -780,11 +635,8 @@
   </div>
 </div>
 
-<!-- Template offscreen usado pelo html2pdf -->
-<div class="pdf-template" id="pdfTemplate" aria-hidden="true"></div>
-
 <script src="config.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
@@ -949,113 +801,220 @@ function showLogStatus(state) {
   if (state === 'ok') setTimeout(() => el.classList.remove('visible'), 3500);
 }
 
-// ─── Exportação PDF via html2pdf ─────────────────────────────
-function buildPdfTemplate(payload) {
-  const data = new Date(payload.timestamp).toLocaleString('pt-BR', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
-  const rf = payload.rf;
-  const compareSign = (v) => (v >= 0 ? '+' : '') + fmtPct(v, 1);
-  $('pdfTemplate').innerHTML = `
-    <div class="pdf-header">
-      <div class="mark">EQI <span>Research</span></div>
-      <div class="date">↗ Simulação · ${data}</div>
-    </div>
-    <h1><span class="arrow">↗</span>Calculadora de Imóveis x Renda Fixa</h1>
-    <p class="pdf-sub">Comparativo entre rentabilidade de imóvel alugado e aplicações de renda fixa.</p>
-
-    <div class="pdf-chapeu">↗ Dados informados</div>
-    <div class="pdf-row"><span class="lbl">Valor do imóvel</span><span class="val">${fmtBRL(payload.inputs.valorImovel)}</span></div>
-    <div class="pdf-row"><span class="lbl">Aluguel mensal (mercado)</span><span class="val">${fmtBRL(payload.inputs.aluguel)}</span></div>
-    <div class="pdf-row"><span class="lbl">IPCA / Spread IPCA+ / CDI</span><span class="val">${fmtPct(payload.premissas.ipca,1)} / ${fmtPct(payload.premissas.spreadIpca,1)} / ${fmtPct(payload.premissas.cdi,2)}</span></div>
-    <div class="pdf-row"><span class="lbl">Prefixado / Alíquota IR RF</span><span class="val">${fmtPct(payload.premissas.prefixado,1)} / ${fmtPct(payload.premissas.aliq,1)}</span></div>
-
-    <div class="pdf-chapeu">↗ Imóveis</div>
-    <div class="pdf-row hi"><span class="lbl">Valorização + Aluguel · 1 ano</span><span class="val">${fmtBRL(payload.imovel.totalImovel)}</span></div>
-    <div class="pdf-row"><span class="lbl">Aluguel líquido (após IR)</span><span class="val">${fmtBRL(payload.imovel.aluguelLiq)}</span></div>
-    <div class="pdf-row"><span class="lbl">Renda líquida anual</span><span class="val">${fmtBRL(payload.imovel.rendaAnual)}</span></div>
-    <div class="pdf-row"><span class="lbl">Valorização do imóvel (IPCA · 1 ano)</span><span class="val">${fmtBRL(payload.imovel.valorizacao)}</span></div>
-
-    <div class="pdf-chapeu">↗ Renda Fixa · rendimento líquido em 1 ano</div>
-    <div class="pdf-rf">
-      ${rf.map(o => `
-        <div class="pdf-rf-card">
-          <h3>${o.label}</h3>
-          <div class="line"><span>Rent. mensal líq.</span><span>${fmtPct(o.rateMes, 3)}</span></div>
-          <div class="line"><span>Rend. mensal</span><span>${fmtBRL(o.rendMes)}</span></div>
-          <span class="big">${fmtBRL(o.rendAno)}</span>
-          <div class="line" style="margin-top:6px"><span>vs. Imóvel</span><span>${compareSign(o.vsImovel)}</span></div>
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="pdf-notes">
-      <strong>Observações:</strong>
-      <ul>
-        <li>Tabela Regressiva do IR aplicada sobre o aluguel recebido.</li>
-        <li>Rentabilidade da renda fixa baseada nas projeções do Boletim Focus para o primeiro ano.</li>
-        <li>Outras deduções do aluguel podem vir de comissão imobiliária ou fundo de reserva.</li>
-        <li>Rentabilidade da renda fixa depende de condições de venda antecipada dos títulos.</li>
-      </ul>
-    </div>
-
-    <div class="pdf-footer">
-      <div>© EQI · v1.0 2025 · SC ↔ BR</div>
-      <div class="mark">EQI Research</div>
-    </div>
-  `;
-}
-
-async function exportPdf() {
+// ─── Exportação PDF via jsPDF (construção programática) ──────
+function exportPdf() {
   if (!lastPayload) return;
   const btn = $('btnExportPdf');
-  const tpl = $('pdfTemplate');
   btn.disabled = true;
-  const original = btn.innerHTML;
+  const orig = btn.innerHTML;
   btn.innerHTML = '<span>↻</span>Gerando PDF...';
+
   try {
-    buildPdfTemplate(lastPayload);
-    // Torna o template visível na viewport (em camada de fundo) pra
-    // o html2canvas conseguir capturar o layout corretamente
-    tpl.classList.add('rendering');
-    // Aguarda 2 frames + load das fontes pra garantir layout final
-    await new Promise(r => requestAnimationFrame(r));
-    await new Promise(r => requestAnimationFrame(r));
-    if (document.fonts && document.fonts.ready) {
-      try { await document.fonts.ready; } catch (_) {}
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error('Biblioteca jsPDF não carregou. Verifique conexão.');
     }
-    await html2pdf().from(tpl).set({
-      margin:     0,
-      filename:   `eqi-calc-imoveis-rf-${new Date().toISOString().slice(0,10)}.pdf`,
-      image:      { type: 'jpeg', quality: 0.95 },
-      html2canvas:{
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        windowWidth: 794,
-        logging: false,
-        onclone: (clonedDoc) => {
-          // Garante que o template fica em posição normal no DOM clonado
-          const clonedTpl = clonedDoc.getElementById('pdfTemplate');
-          if (clonedTpl) {
-            clonedTpl.style.position = 'static';
-            clonedTpl.style.opacity = '1';
-            clonedTpl.style.zIndex = 'auto';
-            clonedTpl.style.left = 'auto';
-            clonedTpl.style.top = 'auto';
-          }
-        }
-      },
-      jsPDF:      { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+    const W = 210, M = 14;
+    const C = {
+      verde:        [0, 158, 118],
+      verdeEsc:     [0, 64, 49],
+      verdeMto:     [0, 41, 30],
+      verdeClaro:   [99, 198, 165],
+      muted:        [90, 107, 102],
+      neutroVerde:  [217, 227, 224],
+      neutroClaro:  [242, 237, 237],
+      line:         [217, 227, 224],
+      warn:         [184, 92, 58]
+    };
+    const setText = ([r,g,b]) => pdf.setTextColor(r,g,b);
+    const setFill = ([r,g,b]) => pdf.setFillColor(r,g,b);
+    const setDraw = ([r,g,b]) => pdf.setDrawColor(r,g,b);
+
+    let y = M;
+
+    // ─── HEADER ───
+    pdf.setFontSize(13);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('EQI', M, y);
+    const eqiW = pdf.getTextWidth('EQI ');
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeMto);
+    pdf.text('Research', M + eqiW, y);
+
+    pdf.setFontSize(8);
+    setText(C.muted);
+    const dataStr = 'SIMULAÇÃO · ' + new Date(lastPayload.timestamp).toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    pdf.text(dataStr, W - M, y, { align: 'right' });
+
+    y += 3;
+    setDraw(C.verde);
+    pdf.setLineWidth(0.6);
+    pdf.line(M, y, W - M, y);
+    y += 11;
+
+    // ─── TÍTULO ───
+    pdf.setFontSize(22);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeMto);
+    pdf.text('Calculadora de Imóveis', M, y);
+    y += 8;
+    pdf.text('x Renda Fixa', M, y);
+    y += 6;
+    pdf.setFontSize(10);
+    setText(C.muted);
+    pdf.text('Comparativo entre rentabilidade de imóvel alugado e aplicações de renda fixa.', M, y);
+    y += 12;
+
+    // ─── HELPERS ───
+    const heading = (text) => {
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'bold');
+      setText(C.verde);
+      pdf.text(text.toUpperCase(), M, y);
+      y += 6;
+    };
+    const row = (label, value) => {
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text(label, M, y);
+      pdf.setFont('helvetica', 'bold');
+      setText(C.verdeMto);
+      pdf.text(value, W - M, y, { align: 'right' });
+      y += 2;
+      setDraw(C.line);
+      pdf.setLineWidth(0.15);
+      pdf.line(M, y, W - M, y);
+      y += 4;
+    };
+    const highlight = (label, value) => {
+      const rh = 12;
+      setFill(C.neutroVerde);
+      pdf.rect(M, y - 4, W - 2*M, rh, 'F');
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text(label, M + 3, y + 2);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(14);
+      setText(C.verde);
+      pdf.text(value, W - M - 3, y + 2.5, { align: 'right' });
+      y += rh + 2;
+    };
+
+    // ─── DADOS INFORMADOS ───
+    heading('Dados informados');
+    row('Valor do imóvel', fmtBRL(lastPayload.inputs.valorImovel));
+    row('Aluguel mensal (mercado)', fmtBRL(lastPayload.inputs.aluguel));
+    row('IPCA / Spread IPCA+ / CDI',
+        fmtPct(lastPayload.premissas.ipca,1) + ' / ' + fmtPct(lastPayload.premissas.spreadIpca,1) + ' / ' + fmtPct(lastPayload.premissas.cdi,2));
+    row('Prefixado / Alíquota IR RF',
+        fmtPct(lastPayload.premissas.prefixado,1) + ' / ' + fmtPct(lastPayload.premissas.aliq,1));
+    y += 4;
+
+    // ─── IMÓVEIS ───
+    heading('Imóveis');
+    highlight('Valorização + Aluguel · 1 ano', fmtBRL(lastPayload.imovel.totalImovel));
+    row('Aluguel líquido (após IR)', fmtBRL(lastPayload.imovel.aluguelLiq));
+    row('Renda líquida anual', fmtBRL(lastPayload.imovel.rendaAnual));
+    row('Valorização do imóvel (IPCA · 1 ano)', fmtBRL(lastPayload.imovel.valorizacao));
+    y += 4;
+
+    // ─── RENDA FIXA ───
+    heading('Renda Fixa · rendimento líquido em 1 ano');
+    const gap = 3;
+    const cardW = (W - 2*M - 2*gap) / 3;
+    const cardH = 40;
+    const cardY = y;
+
+    lastPayload.rf.forEach((opt, i) => {
+      const x = M + i * (cardW + gap);
+      setDraw(C.line);
+      pdf.setLineWidth(0.25);
+      pdf.roundedRect(x, cardY, cardW, cardH, 1.5, 1.5, 'S');
+
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'bold');
+      setText(C.verde);
+      pdf.text(opt.label.toUpperCase(), x + 3, cardY + 6);
+
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text('Rent. mensal líq.', x + 3, cardY + 12);
+      setText(C.verdeMto);
+      pdf.text(fmtPct(opt.rateMes, 3), x + cardW - 3, cardY + 12, { align: 'right' });
+
+      setText(C.muted);
+      pdf.text('Rend. mensal', x + 3, cardY + 17);
+      setText(C.verdeMto);
+      pdf.text(fmtBRL(opt.rendMes), x + cardW - 3, cardY + 17, { align: 'right' });
+
+      pdf.setFontSize(13);
+      pdf.setFont('helvetica', 'bold');
+      setText(C.verdeMto);
+      pdf.text(fmtBRL(opt.rendAno), x + 3, cardY + 27);
+
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text('vs. Imóvel', x + 3, cardY + 35);
+      pdf.setFont('helvetica', 'bold');
+      const isPos = opt.vsImovel >= 0;
+      setText(isPos ? C.verde : C.warn);
+      pdf.text((isPos ? '+' : '') + fmtPct(opt.vsImovel, 1), x + cardW - 3, cardY + 35, { align: 'right' });
+    });
+    y = cardY + cardH + 8;
+
+    // ─── OBSERVAÇÕES ───
+    const notesH = 30;
+    setFill(C.neutroClaro);
+    pdf.rect(M, y, W - 2*M, notesH, 'F');
+    setFill(C.verde);
+    pdf.rect(M, y, 1.5, notesH, 'F');
+
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('OBSERVAÇÕES', M + 5, y + 5);
+
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeEsc);
+    const notes = [
+      'Tabela Regressiva do IR aplicada sobre o aluguel recebido.',
+      'Rentabilidade da renda fixa baseada nas projeções do Boletim Focus para o primeiro ano.',
+      'Outras deduções do aluguel podem vir de comissão imobiliária ou fundo de reserva.',
+      'Rentabilidade da renda fixa depende de condições de venda antecipada dos títulos.'
+    ];
+    notes.forEach((n, i) => pdf.text('•  ' + n, M + 5, y + 11 + i * 4.5));
+    y += notesH + 6;
+
+    // ─── FOOTER ───
+    setDraw(C.line);
+    pdf.setLineWidth(0.2);
+    pdf.line(M, y, W - M, y);
+    y += 5;
+    pdf.setFontSize(7);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.muted);
+    pdf.text('© EQI · v1.0 2025 · SC <-> BR', M, y);
+    setText(C.verde);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('EQI RESEARCH', W - M, y, { align: 'right' });
+
+    pdf.save('eqi-calc-imoveis-rf-' + new Date().toISOString().slice(0,10) + '.pdf');
   } catch (err) {
     console.error('[desexcel] falha PDF:', err);
-    alert('Não foi possível gerar o PDF agora. Tente recarregar a página.');
+    alert('Não foi possível gerar o PDF. ' + (err.message || err));
   } finally {
-    tpl.classList.remove('rendering');
     btn.disabled = false;
-    btn.innerHTML = original;
+    btn.innerHTML = orig;
   }
 }
 
