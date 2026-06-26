@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Imóveis x Renda Fixa — EQI Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* EQI Brand Book v1.0 — Paleta institucional */
+    --off-white:        #FFFAFA;
+    --neutro-claro:     #F2EDED;
+    --neutro-verde:     #D9E3E0;
+    --verde-claro:      #63C6A5;
+    --verde:            #009E76;   /* Verde institucional · Pantone 338 */
+    --verde-escuro:     #004031;   /* Pantone 3405 */
+    --verde-muito-esc:  #00291E;   /* Pantone 3425 */
+
+    --ink:              var(--verde-muito-esc);
+    --muted:            #5a6b66;
+    --line:             #D9E3E0;
+    --warn:             #b85c3a;
+
+    --ff: 'Aeonik', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--ff);
+    background: var(--off-white);
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────── */
+  header.brand {
+    background: var(--verde-muito-esc);
+    color: var(--off-white);
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+  .brand-mark {
+    font-weight: 700;
+    color: var(--verde-claro);
+    letter-spacing: 0.04em;
+    font-size: 14px;
+  }
+  .brand-mark span { color: var(--off-white); opacity: 0.65; font-weight: 400; margin-left: 8px; }
+  header.brand h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    max-width: 820px;
+  }
+  header.brand h1 .arrow { color: var(--verde-claro); margin-right: 6px; }
+  .brand-sub {
+    margin-top: 14px;
+    font-size: 14px;
+    opacity: 0.75;
+    max-width: 720px;
+  }
+
+  /* ─── SECTION LABELS (chapéus em caixa alta) ─────────────── */
+  .chapeu {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin-bottom: 4px;
+  }
+
+  /* ─── GRID PRINCIPAL ─────────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--off-white);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  .card.dark {
+    background: var(--verde-escuro);
+    color: var(--off-white);
+    border-color: var(--verde-escuro);
+  }
+  .card.dark .chapeu { color: var(--verde-claro); }
+  .card.dark .row { border-color: rgba(255,250,250,0.12); }
+  .card.dark .row label { color: rgba(255,250,250,0.7); }
+
+  .card h2 {
+    margin: 0 0 22px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .card h2 .arrow { color: var(--verde-claro); margin-right: 4px; }
+
+  /* ─── ROWS ───────────────────────────────────────────────── */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: none; }
+  .row label {
+    color: var(--muted);
+    font-size: 13px;
+    flex: 1;
+    font-weight: 400;
+  }
+  .row .val {
+    font-weight: 600;
+    font-size: 15px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    min-width: 140px;
+  }
+  .row.highlight .val { font-size: 18px; color: var(--verde); font-weight: 700; }
+  .card.dark .row.highlight .val { color: var(--verde-claro); }
+
+  input[type=number] {
+    width: 180px;
+    padding: 10px 12px;
+    border: 1px solid var(--verde-claro);
+    background: rgba(99,198,165,0.10);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    text-align: right;
+    color: var(--verde-muito-esc);
+    font-variant-numeric: tabular-nums;
+    transition: all 0.15s;
+  }
+  input[type=number]:focus {
+    outline: none;
+    border-color: var(--verde);
+    background: rgba(99,198,165,0.18);
+    box-shadow: 0 0 0 3px rgba(0,158,118,0.15);
+  }
+  .card.dark input[type=number] {
+    color: var(--off-white);
+    background: rgba(99,198,165,0.12);
+    border-color: rgba(99,198,165,0.45);
+  }
+  .card.dark input[type=number]:focus {
+    background: rgba(99,198,165,0.22);
+    border-color: var(--verde-claro);
+    box-shadow: 0 0 0 3px rgba(99,198,165,0.20);
+  }
+
+  /* ─── HERO NUMBER (números expressivos — filosofia EQI) ──── */
+  .hero-number {
+    background: var(--neutro-verde);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: end;
+  }
+  .hero-number .stat .lbl {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--verde-escuro);
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .hero-number .stat .num {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--verde-muito-esc);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-number .stat .num small {
+    font-size: 0.45em;
+    color: var(--verde);
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ─── RENDA FIXA CARDS ───────────────────────────────────── */
+  .rf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 20px;
+  }
+  @media (max-width: 760px) { .rf-grid { grid-template-columns: 1fr; } }
+  .rf-card {
+    border: 1px solid rgba(255,250,250,0.18);
+    border-radius: 10px;
+    padding: 18px;
+    background: rgba(255,250,250,0.04);
+  }
+  .rf-card h3 {
+    margin: 0 0 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--verde-claro);
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,250,250,0.12);
+  }
+  .rf-card .line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 5px 0;
+    color: rgba(255,250,250,0.85);
+    font-variant-numeric: tabular-nums;
+  }
+  .rf-card .line span:first-child { color: rgba(255,250,250,0.55); }
+  .rf-card .big {
+    display: block;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--off-white);
+    margin-top: 10px;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .rf-card .compare {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,250,250,0.12);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .compare-pos { color: var(--verde-claro); font-weight: 700; }
+  .compare-neg { color: #ff9b7a; font-weight: 700; }
+
+  /* ─── CHART ──────────────────────────────────────────────── */
+  .chart { margin-top: 20px; }
+  .chart-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 130px;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .chart-row .lbl-side {
+    color: var(--verde-muito-esc);
+    font-weight: 500;
+  }
+  .bar-track {
+    background: var(--neutro-claro);
+    border-radius: 4px;
+    height: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.35s cubic-bezier(.2,.7,.3,1);
+  }
+  .chart-val {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── DETAILS (premissas) ────────────────────────────────── */
+  details {
+    margin-top: 16px;
+    border-top: 1px solid rgba(255,250,250,0.15);
+    padding-top: 14px;
+  }
+  details summary {
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--verde-claro);
+    list-style: none;
+  }
+  details summary::before {
+    content: '↗';
+    margin-right: 8px;
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] summary { margin-bottom: 8px; }
+
+  /* ─── NOTAS ──────────────────────────────────────────────── */
+  .notes {
+    background: var(--neutro-claro);
+    border-left: 3px solid var(--verde);
+    padding: 22px 26px;
+    border-radius: 10px;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--verde-escuro);
+  }
+  .notes h3 {
+    margin: 0 0 12px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--verde);
+  }
+  .notes ul { margin: 0; padding-left: 20px; }
+  .notes li { margin: 6px 0; line-height: 1.5; }
+
+  /* ─── BOTÃO CALCULAR ─────────────────────────────────────── */
+  .calc-wrap {
+    margin-top: 28px;
+    text-align: center;
+  }
+  .calc-hint {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .btn-calcular {
+    background: var(--verde);
+    color: var(--off-white);
+    border: none;
+    padding: 20px 64px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(0,158,118,0.25);
+  }
+  .btn-calcular:hover {
+    background: var(--verde-escuro);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,64,49,0.3);
+  }
+  .btn-calcular .arrow {
+    margin-right: 10px;
+    display: inline-block;
+    color: var(--verde-claro);
+  }
+  body.results-hidden .result-block { display: none !important; }
+
+  /* ─── BACK LINK ──────────────────────────────────────────── */
+  .back-link {
+    color: var(--verde-claro);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+  }
+  .back-link:hover { opacity: 1; }
+
+  /* ─── ACTION BAR (Exportar PDF) ──────────────────────────── */
+  .action-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--verde);
+    border: 1.5px solid var(--verde);
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-secondary:hover {
+    background: var(--verde);
+    color: var(--off-white);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  /* ─── LOG STATUS (sutil, embaixo do botão calcular) ──────── */
+  .log-status {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .log-status.visible { opacity: 0.7; }
+  .log-status.ok::before    { content: '●'; color: var(--verde); margin-right: 6px; }
+  .log-status.fail::before  { content: '●'; color: var(--warn);  margin-right: 6px; }
+
+  /* ─── PDF TEMPLATE (offscreen, usado pelo html2pdf) ──────── */
+  .pdf-template {
+    position: absolute;
+    left: -10000px;
+    top: 0;
+    width: 210mm;
+    background: #ffffff;
+    color: var(--verde-muito-esc);
+    font-family: var(--ff);
+    padding: 16mm 14mm;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+  .pdf-template .pdf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--verde);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .pdf-template .pdf-header .mark {
+    color: var(--verde);
+    font-weight: 700;
+    font-size: 14pt;
+    letter-spacing: 0.04em;
+  }
+  .pdf-template .pdf-header .mark span {
+    color: var(--verde-muito-esc);
+    font-weight: 400;
+    margin-left: 6px;
+    opacity: 0.7;
+  }
+  .pdf-template .pdf-header .date {
+    font-size: 9pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pdf-template h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .pdf-template h1 .arrow { color: var(--verde-claro); margin-right: 4px; }
+  .pdf-template .pdf-sub {
+    color: var(--muted);
+    font-size: 10pt;
+    margin: 0 0 18px;
+  }
+  .pdf-template .pdf-chapeu {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin: 18px 0 8px;
+  }
+  .pdf-template .pdf-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 10pt;
+  }
+  .pdf-template .pdf-row:last-child { border-bottom: none; }
+  .pdf-template .pdf-row .lbl { color: var(--muted); }
+  .pdf-template .pdf-row .val { font-weight: 600; }
+  .pdf-template .pdf-row.hi   { background: var(--neutro-verde); padding: 10px 12px; border-radius: 6px; border: none; margin: 4px 0; }
+  .pdf-template .pdf-row.hi .val { color: var(--verde); font-size: 14pt; font-weight: 700; }
+  .pdf-template .pdf-rf {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .pdf-template .pdf-rf-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .pdf-template .pdf-rf-card h3 {
+    margin: 0 0 6px;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--verde);
+    font-weight: 700;
+  }
+  .pdf-template .pdf-rf-card .big {
+    display: block;
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--verde-muito-esc);
+    margin-top: 4px;
+  }
+  .pdf-template .pdf-rf-card .line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    padding: 2px 0;
+  }
+  .pdf-template .pdf-rf-card .line span:first-child { color: var(--muted); }
+  .pdf-template .pdf-notes {
+    margin-top: 20px;
+    padding: 12px 14px;
+    background: var(--neutro-claro);
+    border-left: 3px solid var(--verde);
+    border-radius: 4px;
+    font-size: 8.5pt;
+    color: var(--verde-escuro);
+  }
+  .pdf-template .pdf-notes ul { margin: 4px 0 0; padding-left: 16px; }
+  .pdf-template .pdf-notes li { margin: 3px 0; }
+  .pdf-template .pdf-footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pdf-template .pdf-footer .mark { color: var(--verde); font-weight: 700; }
+
+  /* ─── CTA ────────────────────────────────────────────────── */
+  .cta {
+    background: var(--verde);
+    color: var(--off-white);
+    text-align: center;
+    padding: 22px 28px;
+    border-radius: 12px;
+    margin-top: 24px;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+    width: 100%;
+    font-family: inherit;
+  }
+  .cta:hover { background: var(--verde-escuro); }
+  .cta .arrow { display: inline-block; margin-left: 8px; transition: transform 0.2s; }
+  .cta:hover .arrow { transform: translate(4px, -4px); }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer .mark {
+    color: var(--verde);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body class="results-hidden">
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="brand">
+    <div class="brand-top">
+      <div class="brand-mark">EQI <span>Research</span></div>
+      <a href="../" class="back-link">← desexcel</a>
+    </div>
+    <h1><span class="arrow">↗</span>Imóveis ou Renda Fixa?<br>O cálculo que mostra o caminho.</h1>
+    <p class="brand-sub">Compare a rentabilidade de um imóvel alugado com aplicações de renda fixa — com estratégia, números reais e clareza nas escolhas.</p>
+  </header>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <!-- IMÓVEIS -->
+    <div class="card">
+      <span class="chapeu">↗ Imóveis</span>
+      <h2>Seu patrimônio<br>em concreto.</h2>
+
+      <div class="row">
+        <label for="valorImovel">Valor do imóvel</label>
+        <input type="number" id="valorImovel" value="2000000" min="0" step="10000">
+      </div>
+      <div class="row">
+        <label for="aluguel">Aluguel mensal (mercado)</label>
+        <input type="number" id="aluguel" value="13000" min="0" step="100">
+      </div>
+
+      <div class="hero-number result-block">
+        <div class="stat">
+          <div class="lbl">Valorização + Aluguel · 1 ano</div>
+          <div class="num" id="outTotalImovel">—</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">% do valor do imóvel</div>
+          <div class="num" id="outPctImovel">—<small>a.a.</small></div>
+        </div>
+      </div>
+
+      <div class="row result-block"><label>Aluguel líquido (após IR)</label><div class="val" id="outAluguelLiq">—</div></div>
+      <div class="row result-block"><label>Renda líquida anual</label><div class="val" id="outRendaAnual">—</div></div>
+      <div class="row result-block"><label>Valorização do imóvel (IPCA · 1 ano)</label><div class="val" id="outValorizacao">—</div></div>
+    </div>
+
+    <!-- RENDA FIXA -->
+    <div class="card dark">
+      <span class="chapeu">↗ Renda Fixa</span>
+      <h2>O mesmo capital,<br>com estratégia.</h2>
+
+      <div class="rf-grid result-block">
+        <div class="rf-card">
+          <h3>CDB 100% CDI</h3>
+          <div class="line"><span>Rent. mensal líq.</span><span id="cdbRentMes">—</span></div>
+          <div class="line"><span>Rend. mensal médio</span><span id="cdbRendMes">—</span></div>
+          <span class="big" id="cdbRendAno">—</span>
+          <div class="compare"><span>vs. Imóvel</span><span id="cdbCompare">—</span></div>
+        </div>
+        <div class="rf-card">
+          <h3>IPCA + 10%</h3>
+          <div class="line"><span>Rent. mensal líq.</span><span id="ipcaRentMes">—</span></div>
+          <div class="line"><span>Rend. mensal médio</span><span id="ipcaRendMes">—</span></div>
+          <span class="big" id="ipcaRendAno">—</span>
+          <div class="compare"><span>vs. Imóvel</span><span id="ipcaCompare">—</span></div>
+        </div>
+        <div class="rf-card">
+          <h3>Prefixado 18% a.a.</h3>
+          <div class="line"><span>Rent. mensal líq.</span><span id="preRentMes">—</span></div>
+          <div class="line"><span>Rend. mensal médio</span><span id="preRendMes">—</span></div>
+          <span class="big" id="preRendAno">—</span>
+          <div class="compare"><span>vs. Imóvel</span><span id="preCompare">—</span></div>
+        </div>
+      </div>
+
+      <details>
+        <summary>Premissas (clique para editar)</summary>
+        <div class="row">
+          <label for="ipca">IPCA (% ao ano)</label>
+          <input type="number" id="ipca" value="5.5" step="0.1">
+        </div>
+        <div class="row">
+          <label for="spreadIpca">Spread IPCA+ (% ao ano)</label>
+          <input type="number" id="spreadIpca" value="10" step="0.1">
+        </div>
+        <div class="row">
+          <label for="cdi">CDI (% ao ano)</label>
+          <input type="number" id="cdi" value="13.15" step="0.05">
+        </div>
+        <div class="row">
+          <label for="prefixado">Prefixado (% ao ano)</label>
+          <input type="number" id="prefixado" value="18" step="0.1">
+        </div>
+        <div class="row">
+          <label for="aliquota">Alíquota IR Renda Fixa (>360 dias)</label>
+          <input type="number" id="aliquota" value="17.5" step="0.5">
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- BOTÃO CALCULAR -->
+  <div class="calc-wrap">
+    <p class="calc-hint" id="calcHint">↗ Preencha os valores e clique em calcular</p>
+    <button class="btn-calcular" id="btnCalcular"><span class="arrow">↗</span>Calcular</button>
+    <div class="log-status" id="logStatus"></div>
+  </div>
+
+  <!-- CHART -->
+  <div class="card result-block" style="margin-top:20px">
+    <span class="chapeu">↗ Comparativo</span>
+    <h2>Rendimento mensal líquido,<br>lado a lado.</h2>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <!-- ACTION BAR (Exportar PDF) -->
+  <div class="action-bar result-block">
+    <button class="btn-secondary" id="btnExportPdf">
+      <span>↓</span>Exportar simulação em PDF
+    </button>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="notes">
+    <h3>↗ Observações</h3>
+    <ul>
+      <li>Utilizamos a Tabela Regressiva do IR para o cálculo do Imposto de Renda sobre o aluguel recebido.</li>
+      <li>A rentabilidade da renda fixa foi calculada com base nas projeções do Boletim Focus para o primeiro ano.</li>
+      <li>Outras deduções do aluguel podem vir de comissão imobiliária ou fundo de reserva.</li>
+      <li>A rentabilidade da renda fixa também dependerá de condições de venda antecipada dos títulos.</li>
+    </ul>
+  </div>
+
+  <!-- CTA -->
+  <button class="cta">Abra sua conta na EQI Investimentos e invista em Renda Fixa<span class="arrow">↗</span></button>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>© EQI · v1.0 2025 · SC ↔ BR</div>
+    <div class="mark">EQI Research</div>
+  </div>
+</div>
+
+<!-- Template offscreen usado pelo html2pdf -->
+<div class="pdf-template" id="pdfTemplate" aria-hidden="true"></div>
+
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+
+const fmtBRL = (v) => isFinite(v)
+  ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })
+  : '—';
+const fmtBRLshort = (v) => isFinite(v)
+  ? 'R$ ' + Math.round(v).toLocaleString('pt-BR')
+  : '—';
+const fmtPct = (v, dec = 2) => isFinite(v)
+  ? (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + '%'
+  : '—';
+
+// Tabela Regressiva IR sobre aluguel (mesmas faixas da planilha original)
+function aluguelLiquido(aluguel) {
+  if (aluguel < 2112) return aluguel;
+  if (aluguel < 2826.65) return aluguel * 0.925;
+  if (aluguel < 3751.05) return aluguel * 0.85;
+  if (aluguel < 4664.68) return aluguel * 0.775;
+  return aluguel * 0.725;
+}
+
+function calc() {
+  const valorImovel = parseFloat($('valorImovel').value) || 0;
+  const aluguel     = parseFloat($('aluguel').value) || 0;
+
+  const ipca       = (parseFloat($('ipca').value)       || 0) / 100;
+  const spreadIpca = (parseFloat($('spreadIpca').value) || 0) / 100;
+  const cdi        = (parseFloat($('cdi').value)        || 0) / 100;
+  const prefixado  = (parseFloat($('prefixado').value)  || 0) / 100;
+  const aliq       = (parseFloat($('aliquota').value)   || 0) / 100;
+
+  // ---- IMÓVEL ----
+  const pctImovel    = valorImovel > 0 ? aluguel / valorImovel : 0;
+  const aluguelLiq   = aluguelLiquido(aluguel);
+  const rendaAnual   = aluguelLiq * 12;
+  const valorizacao  = valorImovel * ipca;
+  const totalImovel  = rendaAnual + valorizacao;
+
+  $('outPctImovel').innerHTML     = fmtPct(pctImovel * 12, 2) + '<small>a.a.</small>';
+  $('outAluguelLiq').textContent  = fmtBRL(aluguelLiq);
+  $('outRendaAnual').textContent  = fmtBRL(rendaAnual);
+  $('outValorizacao').textContent = fmtBRL(valorizacao);
+  $('outTotalImovel').textContent = fmtBRLshort(totalImovel);
+
+  // ---- RENDA FIXA ----
+  const cdbAA  = cdi * (1 - aliq);
+  const ipcaAA = ((1 + ipca) * (1 + spreadIpca) - 1) * (1 - aliq);
+  const preAA  = prefixado * (1 - aliq);
+  const toMes  = (aa) => Math.pow(1 + aa, 1/12) - 1;
+
+  const opts = [
+    { key: 'cdb',  label: 'CDB 100% CDI',      rateAA: cdbAA,  rateMes: toMes(cdbAA)  },
+    { key: 'ipca', label: 'IPCA + 10%',        rateAA: ipcaAA, rateMes: toMes(ipcaAA) },
+    { key: 'pre',  label: 'Prefixado 18% a.a.', rateAA: preAA, rateMes: toMes(preAA)  }
+  ];
+
+  opts.forEach(o => {
+    o.rendMes  = valorImovel * o.rateMes;
+    o.rendAno  = valorImovel * o.rateAA;
+    o.vsImovel = totalImovel !== 0 ? (o.rendAno - totalImovel) / totalImovel : 0;
+
+    $(o.key + 'RentMes').textContent = fmtPct(o.rateMes, 3);
+    $(o.key + 'RendMes').textContent = fmtBRL(o.rendMes);
+    $(o.key + 'RendAno').textContent = fmtBRLshort(o.rendAno);
+
+    const cmp = $(o.key + 'Compare');
+    cmp.textContent = (o.vsImovel >= 0 ? '+' : '') + fmtPct(o.vsImovel, 1);
+    cmp.className   = o.vsImovel >= 0 ? 'compare-pos' : 'compare-neg';
+  });
+
+  // ---- CHART ----
+  const chartData = [
+    { label: 'Imóvel (aluguel líq.)', value: aluguelLiq,      color: 'var(--verde-muito-esc)' },
+    { label: 'CDB 100% CDI',          value: opts[0].rendMes, color: 'var(--verde-escuro)'    },
+    { label: 'IPCA + 10%',            value: opts[1].rendMes, color: 'var(--verde)'           },
+    { label: 'Prefixado 18%',         value: opts[2].rendMes, color: 'var(--verde-claro)'     }
+  ];
+  const max = Math.max(...chartData.map(d => d.value), 1);
+  $('chart').innerHTML = chartData.map(d => `
+    <div class="chart-row">
+      <div class="lbl-side">${d.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(d.value / max * 100).toFixed(1)}%; background:${d.color};"></div>
+      </div>
+      <div class="chart-val">${fmtBRL(d.value)}</div>
+    </div>
+  `).join('');
+
+  // ---- Payload pra logging e PDF ----
+  return {
+    timestamp: new Date().toISOString(),
+    inputs:   { valorImovel, aluguel },
+    premissas:{ ipca, spreadIpca, cdi, prefixado, aliq },
+    imovel:   { pctImovel, aluguelLiq, rendaAnual, valorizacao, totalImovel },
+    rf:       opts.map(o => ({
+                key: o.key, label: o.label,
+                rateAA: o.rateAA, rateMes: o.rateMes,
+                rendMes: o.rendMes, rendAno: o.rendAno,
+                vsImovel: o.vsImovel
+              }))
+  };
+}
+
+// ─── Session ID anônimo (persiste pela aba) ──────────────────
+function getSessionId() {
+  const KEY = 'desexcel_session_id';
+  let id = sessionStorage.getItem(KEY);
+  if (!id) {
+    id = 'sx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    sessionStorage.setItem(KEY, id);
+  }
+  return id;
+}
+
+// ─── Logging via Google Apps Script ──────────────────────────
+async function logCalculation(payload) {
+  const cfg = window.DESEXCEL_CONFIG || {};
+  const url = cfg.LOGGER_URL;
+  if (!url || url.startsWith('COLE_AQUI')) {
+    // Logger não configurado — modo silencioso
+    return { ok: false, reason: 'not-configured' };
+  }
+  const body = {
+    tool:      cfg.TOOL_ID || 'imoveisxrendafixa',
+    sessionId: getSessionId(),
+    timestamp: payload.timestamp,
+    ...payload.inputs,
+    ...payload.premissas,
+    aluguelLiq:   payload.imovel.aluguelLiq,
+    rendaAnual:   payload.imovel.rendaAnual,
+    valorizacao:  payload.imovel.valorizacao,
+    totalImovel:  payload.imovel.totalImovel,
+    cdbRendAno:   payload.rf[0].rendAno,
+    ipcaRendAno:  payload.rf[1].rendAno,
+    preRendAno:   payload.rf[2].rendAno,
+    userAgent: navigator.userAgent,
+    lang:      navigator.language,
+    origem:    location.href
+  };
+  try {
+    // text/plain evita preflight CORS (Apps Script lê e.postData.contents)
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    });
+    return { ok: true };
+  } catch (err) {
+    console.warn('[desexcel] falha ao registrar:', err);
+    return { ok: false, reason: 'network', error: err };
+  }
+}
+
+function showLogStatus(state) {
+  const el = $('logStatus');
+  if (!el) return;
+  el.className = 'log-status visible ' + state;
+  el.textContent = state === 'ok'   ? 'Cálculo registrado'
+                 : state === 'fail' ? 'Falha ao registrar (cálculo segue válido)'
+                 :                    '';
+  if (state === 'ok') setTimeout(() => el.classList.remove('visible'), 3500);
+}
+
+// ─── Exportação PDF via html2pdf ─────────────────────────────
+function buildPdfTemplate(payload) {
+  const data = new Date(payload.timestamp).toLocaleString('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+  const rf = payload.rf;
+  const compareSign = (v) => (v >= 0 ? '+' : '') + fmtPct(v, 1);
+  $('pdfTemplate').innerHTML = `
+    <div class="pdf-header">
+      <div class="mark">EQI <span>Research</span></div>
+      <div class="date">↗ Simulação · ${data}</div>
+    </div>
+    <h1><span class="arrow">↗</span>Calculadora de Imóveis x Renda Fixa</h1>
+    <p class="pdf-sub">Comparativo entre rentabilidade de imóvel alugado e aplicações de renda fixa.</p>
+
+    <div class="pdf-chapeu">↗ Dados informados</div>
+    <div class="pdf-row"><span class="lbl">Valor do imóvel</span><span class="val">${fmtBRL(payload.inputs.valorImovel)}</span></div>
+    <div class="pdf-row"><span class="lbl">Aluguel mensal (mercado)</span><span class="val">${fmtBRL(payload.inputs.aluguel)}</span></div>
+    <div class="pdf-row"><span class="lbl">IPCA / Spread IPCA+ / CDI</span><span class="val">${fmtPct(payload.premissas.ipca,1)} / ${fmtPct(payload.premissas.spreadIpca,1)} / ${fmtPct(payload.premissas.cdi,2)}</span></div>
+    <div class="pdf-row"><span class="lbl">Prefixado / Alíquota IR RF</span><span class="val">${fmtPct(payload.premissas.prefixado,1)} / ${fmtPct(payload.premissas.aliq,1)}</span></div>
+
+    <div class="pdf-chapeu">↗ Imóveis</div>
+    <div class="pdf-row hi"><span class="lbl">Valorização + Aluguel · 1 ano</span><span class="val">${fmtBRL(payload.imovel.totalImovel)}</span></div>
+    <div class="pdf-row"><span class="lbl">Aluguel líquido (após IR)</span><span class="val">${fmtBRL(payload.imovel.aluguelLiq)}</span></div>
+    <div class="pdf-row"><span class="lbl">Renda líquida anual</span><span class="val">${fmtBRL(payload.imovel.rendaAnual)}</span></div>
+    <div class="pdf-row"><span class="lbl">Valorização do imóvel (IPCA · 1 ano)</span><span class="val">${fmtBRL(payload.imovel.valorizacao)}</span></div>
+
+    <div class="pdf-chapeu">↗ Renda Fixa · rendimento líquido em 1 ano</div>
+    <div class="pdf-rf">
+      ${rf.map(o => `
+        <div class="pdf-rf-card">
+          <h3>${o.label}</h3>
+          <div class="line"><span>Rent. mensal líq.</span><span>${fmtPct(o.rateMes, 3)}</span></div>
+          <div class="line"><span>Rend. mensal</span><span>${fmtBRL(o.rendMes)}</span></div>
+          <span class="big">${fmtBRL(o.rendAno)}</span>
+          <div class="line" style="margin-top:6px"><span>vs. Imóvel</span><span>${compareSign(o.vsImovel)}</span></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="pdf-notes">
+      <strong>Observações:</strong>
+      <ul>
+        <li>Tabela Regressiva do IR aplicada sobre o aluguel recebido.</li>
+        <li>Rentabilidade da renda fixa baseada nas projeções do Boletim Focus para o primeiro ano.</li>
+        <li>Outras deduções do aluguel podem vir de comissão imobiliária ou fundo de reserva.</li>
+        <li>Rentabilidade da renda fixa depende de condições de venda antecipada dos títulos.</li>
+      </ul>
+    </div>
+
+    <div class="pdf-footer">
+      <div>© EQI · v1.0 2025 · SC ↔ BR</div>
+      <div class="mark">EQI Research</div>
+    </div>
+  `;
+}
+
+async function exportPdf() {
+  if (!lastPayload) return;
+  const btn = $('btnExportPdf');
+  btn.disabled = true;
+  const original = btn.innerHTML;
+  btn.innerHTML = '<span>↻</span>Gerando PDF...';
+  try {
+    buildPdfTemplate(lastPayload);
+    await html2pdf().from($('pdfTemplate')).set({
+      margin:     0,
+      filename:   `eqi-calc-imoveis-rf-${new Date().toISOString().slice(0,10)}.pdf`,
+      image:      { type: 'jpeg', quality: 0.95 },
+      html2canvas:{ scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF:      { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).save();
+  } catch (err) {
+    console.error('[desexcel] falha PDF:', err);
+    alert('Não foi possível gerar o PDF agora. Tente recarregar a página.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+// ─── Estado ──────────────────────────────────────────────────
+let lastPayload = null;
+
+document.getElementById('btnCalcular').addEventListener('click', async () => {
+  lastPayload = calc();
+  document.body.classList.remove('results-hidden');
+  const hint = document.getElementById('calcHint');
+  if (hint) hint.textContent = '↗ Recalcule sempre que ajustar os valores';
+  document.getElementById('btnCalcular').textContent = 'Recalcular ↗';
+  document.querySelector('.result-block').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Log assíncrono — não bloqueia a UI
+  const result = await logCalculation(lastPayload);
+  if (result.ok)                          showLogStatus('ok');
+  else if (result.reason === 'network')   showLogStatus('fail');
+});
+
+document.getElementById('btnExportPdf').addEventListener('click', exportPdf);
+</script>
+</body>
+</html>
