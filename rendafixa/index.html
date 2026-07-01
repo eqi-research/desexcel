@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Consolidador de Carteira de Renda Fixa | EQI Investimentos</title>
+<style>
+  :root{
+    --navy:#00291E;
+    --navy-2:#004031;
+    --accent:#009E76;
+    --accent-2:#63C8A5;
+    --bg:#F2EDED;
+    --card:#FFFAFA;
+    --ink:#00291E;
+    --muted:#5a7a72;
+    --line:#D9E3E0;
+    --danger:#e0455e;
+    --shadow:0 8px 28px rgba(0,41,30,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:'Aeonik',Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5;
+  }
+  a{color:var(--accent)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  /* HEADER */
+  header.top{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);
+    color:#fff;padding:26px 0 28px;
+  }
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:46px;height:46px;border-radius:12px;background:#FFFAFA;
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--navy);
+    font-size:20px;letter-spacing:.5px;box-shadow:0 4px 14px rgba(0,41,30,.25)
+  }
+  .brand b{font-size:20px;letter-spacing:.3px}
+  .brand span{display:block;font-size:12px;color:#D9E3E0;font-weight:500}
+  .tagchip{font-size:12px;background:rgba(255,255,255,.1);padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
+  h1.title{margin:22px 0 6px;font-size:28px;font-weight:800;letter-spacing:-.3px}
+  .subtitle{margin:0;color:#D9E3E0;max-width:760px;font-size:15px}
+
+  /* LAYOUT */
+  main{padding:26px 0 60px}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+  @media(max-width:920px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card .hd{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .card .hd h2{margin:0;font-size:16px;font-weight:700}
+  .card .hd .hint{font-size:12px;color:var(--muted)}
+  .card .bd{padding:18px 20px}
+
+  /* MARKET PARAMS */
+  .market{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .market .mbox{
+    flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:12px 14px;box-shadow:var(--shadow)
+  }
+  .market label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .market .inrow{display:flex;align-items:center;gap:6px}
+  .market input,.market select{
+    width:100%;border:none;font-size:20px;font-weight:800;color:var(--navy);outline:none;background:transparent
+  }
+  .market .suffix{font-size:14px;color:var(--muted);font-weight:700}
+
+  /* FORM */
+  .formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .formgrid .full{grid-column:1/-1}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px}
+  .field input,.field select{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;
+    background:#fbfcfe;color:var(--ink);outline:none;transition:.15s
+  }
+  .field input:focus,.field select:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(0,158,118,.12)}
+  .field input:disabled,.field select:disabled{background:#eef1f6;color:#9aa7ba;cursor:not-allowed}
+  .toggle{display:flex;align-items:center;gap:10px;padding-top:26px}
+  .switch{position:relative;width:46px;height:26px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#cdd6e4;border-radius:999px;transition:.2s;cursor:pointer}
+  .slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked+.slider{background:var(--accent)}
+  .switch input:checked+.slider:before{transform:translateX(20px)}
+  .toggle .lab{font-size:13px;font-weight:700}
+
+  .btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .btn{border:none;border-radius:10px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .btn-primary{background:var(--accent);color:var(--navy)}
+  .btn-primary:hover{filter:brightness(.95);transform:translateY(-1px)}
+  .btn-ghost{background:var(--line);color:var(--navy)}
+  .btn-ghost:hover{background:#C8D4D0}
+  .btn-link{background:none;color:var(--muted);padding:12px 6px}
+  .btn-link:hover{color:var(--danger)}
+  .btn-sm{padding:8px 14px;font-size:13px}
+
+  /* SUMMARY */
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .kpi{border-radius:14px;padding:16px;border:1px solid var(--line);background:#fff}
+  .kpi.big{grid-column:1/-1;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border:none}
+  .kpi .k-l{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .kpi.big .k-l{color:#B8D8CC}
+  .kpi .k-v{font-size:26px;font-weight:800;margin-top:4px;color:var(--navy)}
+  .kpi.big .k-v{font-size:34px;color:#fff}
+  .kpi .k-s{font-size:12px;color:var(--muted);margin-top:3px}
+  .kpi.big .k-s{color:#9FBFB5}
+  .accentv{color:var(--accent) !important}
+
+  /* DONUT */
+  .donutwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:18px}
+  .legend{flex:1;min-width:180px}
+  .legend .li{display:flex;align-items:center;gap:9px;font-size:13px;padding:4px 0}
+  .legend .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .legend .li .pct{margin-left:auto;font-weight:700;color:var(--navy)}
+
+  /* TABLE */
+  .tablewrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;background:#F5FAF8}
+  tbody tr:hover{background:#EFF5F2}
+  td .asset-n{font-weight:700}
+  td .asset-t{font-size:11.5px;color:var(--muted)}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .pill.isento{background:rgba(0,158,118,.14);color:#004031}
+  .pill.trib{background:rgba(224,69,94,.12);color:#b22b41}
+  .delx{border:none;background:none;color:#c0ccdd;cursor:pointer;font-size:16px;line-height:1}
+  .delx:hover{color:var(--danger)}
+  .empty{padding:40px 20px;text-align:center;color:var(--muted)}
+  .empty b{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
+
+  tfoot td{font-weight:800;background:var(--navy);color:#fff;border:none}
+  tfoot td .accentv{color:var(--accent-2)}
+
+  /* CTA / lead */
+  .cta{margin-top:24px;background:linear-gradient(135deg,#63C8A5 0%,var(--accent) 100%);border-radius:var(--radius);padding:26px;color:var(--navy);box-shadow:var(--shadow)}
+  .cta h3{margin:0 0 6px;font-size:21px}
+  .cta p{margin:0 0 16px;max-width:560px;color:var(--navy)}
+  .leadform{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px}
+  @media(max-width:760px){.leadform{grid-template-columns:1fr}}
+  .leadform input{padding:12px;border:none;border-radius:10px;font-size:14px;outline:none}
+  .leadform .btn-cta{background:var(--navy);color:#fff;white-space:nowrap}
+  .leadform .btn-cta:hover{background:#001510}
+  .leadok{margin-top:12px;font-weight:700;display:none}
+
+  footer{padding:26px 0;color:var(--muted);font-size:12px;text-align:center}
+  .disc{max-width:900px;margin:0 auto;line-height:1.6}
+  .note{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5}
+
+  /* BAR CHART LIQUIDEZ */
+  .barchart{overflow-x:auto;padding:4px 0 0}
+  .barchart-bars{display:flex;gap:10px;align-items:stretch;height:200px;min-width:560px;padding:0 4px}
+  .bar-col{flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;height:100%}
+  .bar-amount{height:20px;font-size:9.5px;font-weight:700;color:var(--navy);display:flex;align-items:flex-end;justify-content:center;text-align:center;white-space:nowrap;width:100%}
+  .bar-wrap{flex:1;width:78%;display:flex;align-items:flex-end;background:#f0f5f3;border-radius:8px;overflow:hidden;margin:4px 0}
+  .bar-fill{width:100%;background:linear-gradient(to top,var(--accent),var(--accent-2));border-radius:6px;transition:height .4s ease}
+  .bar-label{height:22px;font-size:10.5px;color:var(--muted);font-weight:700;text-align:center;margin-top:4px;white-space:nowrap;display:flex;align-items:flex-start;justify-content:center}
+  .pill trib small{font-size:9px;opacity:.8}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="brand">
+        <div class="logo">EQI</div>
+        <div>
+          <b>EQI Investimentos</b>
+          <span>Consolidador de Carteira de Renda Fixa</span>
+        </div>
+      </div>
+      <div class="tagchip">Ferramenta exclusiva • Renda Fixa</div>
+    </div>
+    <h1 class="title">Quanto a sua carteira de renda fixa está rendendo hoje?</h1>
+    <p class="subtitle">Cadastre seus títulos (CDB, CRA, CRI, Debênture, Tesouro, LCI/LCA…), informe o valor investido em cada um e descubra a rentabilidade <b>bruta</b> e <b>líquida</b> da carteira com base no CDI e no IPCA atuais.</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <!-- PARÂMETROS DE MERCADO -->
+  <div class="market">
+    <div class="mbox">
+      <label>CDI atual (% a.a.)</label>
+      <div class="inrow"><input id="cdi" type="number" step="0.01" value="14.90" /><span class="suffix">%</span></div>
+    </div>
+    <div class="mbox">
+      <label>IPCA anual (% a.a.)</label>
+      <div class="inrow"><input id="ipca" type="number" step="0.01" value="4.50" /><span class="suffix">%</span></div>
+    </div>
+    <div class="mbox">
+      <label>IR padrão (sem data de aquis.)</label>
+      <div class="inrow">
+        <select id="irprazo">
+          <option value="0.225">Até 180 dias — 22,5%</option>
+          <option value="0.20">181 a 360 dias — 20%</option>
+          <option value="0.175">361 a 720 dias — 17,5%</option>
+          <option value="0.15" selected>Acima de 720 dias — 15%</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+    <section class="card">
+      <div class="hd">
+        <h2>Adicionar título</h2>
+        <span class="hint">Preencha e clique em adicionar</span>
+      </div>
+      <div class="bd">
+        <div class="formgrid">
+          <div class="field full">
+            <label>Nome do ativo</label>
+            <input id="f-nome" placeholder="Ex.: Marfrig" />
+          </div>
+
+          <div class="field">
+            <label>Tipo do título</label>
+            <select id="f-tipo">
+              <option value="CDB">CDB</option>
+              <option value="CRA">CRA</option>
+              <option value="CRI">CRI</option>
+              <option value="LCI">LCI</option>
+              <option value="LCA">LCA</option>
+              <option value="Debênture">Debênture</option>
+              <option value="Debênture Incentivada">Debênture Incentivada</option>
+              <option value="Tesouro Selic">Tesouro Selic</option>
+              <option value="Tesouro IPCA+">Tesouro IPCA+</option>
+              <option value="Tesouro Prefixado">Tesouro Prefixado</option>
+              <option value="LC">LC (Letra de Câmbio)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Valor investido (R$)</label>
+            <input id="f-valor" type="number" step="0.01" placeholder="Ex.: 10000" />
+          </div>
+
+          <div class="field">
+            <label>Remuneração</label>
+            <select id="f-rem">
+              <option value="pos">Pós-fixado</option>
+              <option value="pre">Prefixado</option>
+              <option value="hibrido">Híbrido</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Indexador</label>
+            <select id="f-idx">
+              <option value="CDI">CDI</option>
+              <option value="IPCA">IPCA</option>
+              <option value="">— (prefixado)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label id="lbl-taxa">Taxa (%)</label>
+            <input id="f-taxa" type="number" step="0.01" placeholder="Ex.: 105" />
+          </div>
+
+          <div class="field toggle">
+            <label class="switch">
+              <input id="f-isento" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+            <span class="lab">Isento de IR</span>
+          </div>
+
+          <div class="field">
+            <label>Data de aquisição</label>
+            <input id="f-aquisicao" type="date" />
+          </div>
+          <div class="field">
+            <label>Data de vencimento</label>
+            <input id="f-vencimento" type="date" />
+          </div>
+        </div>
+
+        <p class="note" id="taxa-help"></p>
+
+        <div class="btnrow">
+          <button class="btn btn-primary" id="btn-add">+ Adicionar à carteira</button>
+          <button class="btn btn-ghost" id="btn-exemplo">Carregar exemplo</button>
+          <button class="btn btn-link" id="btn-limpar">Limpar tudo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLUNA DIREITA: RESULTADO -->
+    <section class="card">
+      <div class="hd">
+        <h2>Rentabilidade atual da carteira</h2>
+      </div>
+      <div class="bd">
+        <div class="kpis">
+          <div class="kpi big">
+            <div class="k-l">Rentabilidade líquida da carteira</div>
+            <div class="k-v" id="kpi-liq">—</div>
+            <div class="k-s" id="kpi-liq-cdi">Adicione títulos para calcular</div>
+          </div>
+          <div class="kpi">
+            <div class="k-l">Total investido</div>
+            <div class="k-v" id="kpi-total">R$ 0</div>
+            <div class="k-s" id="kpi-qtd">0 títulos</div>
+          </div>
+          <div class="kpi">
+            <div class="k-l">Rentab. bruta (a.a.)</div>
+            <div class="k-v" id="kpi-bruta">—</div>
+            <div class="k-s" id="kpi-bruta-cdi">—</div>
+          </div>
+        </div>
+
+        <div class="donutwrap">
+          <svg id="donut" width="150" height="150" viewBox="0 0 42 42"></svg>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- TABELA -->
+  <section class="card" style="margin-top:22px">
+    <div class="hd">
+      <h2>Detalhamento dos títulos</h2>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="hint">% do CDI líquido = base comum de comparação</span>
+        <button class="btn btn-ghost btn-sm" id="btn-xlsx">⬇ Exportar Excel</button>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>Ativo</th>
+            <th>Remuneração</th>
+            <th>Valor</th>
+            <th>% Carteira</th>
+            <th>Vencimento</th>
+            <th>IR</th>
+            <th>Bruta a.a.</th>
+            <th>Líquida a.a.</th>
+            <th>% CDI líq.</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot id="tfoot" style="display:none">
+          <tr>
+            <td>Carteira consolidada</td>
+            <td>—</td>
+            <td id="ft-valor">—</td>
+            <td>100%</td>
+            <td>—</td>
+            <td>—</td>
+            <td id="ft-bruta">—</td>
+            <td id="ft-liq" class="accentv">—</td>
+            <td id="ft-cdi">—</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="bd" id="empty-bd">
+      <div class="empty">
+        <b>Sua carteira está vazia</b>
+        Cadastre o primeiro título ao lado — ou clique em “Carregar exemplo”.
+      </div>
+    </div>
+  </section>
+
+  <!-- LIQUIDEZ POR SEMESTRE -->
+  <section class="card" style="margin-top:22px" id="card-liquidez">
+    <div class="hd">
+      <h2>Expectativa de liquidez — próximos 5 anos</h2>
+      <span class="hint">Valor que vence por semestre</span>
+    </div>
+    <div class="bd">
+      <div id="chart-liquidez-wrap"></div>
+      <p class="note" id="chart-liquidez-note" style="margin-top:10px"></p>
+    </div>
+  </section>
+
+  <!-- CTA LEADGEN -->
+  <div class="cta">
+    <h3>Dá pra fazer sua carteira render mais?</h3>
+    <p>Receba uma análise gratuita da sua carteira de renda fixa com um assessor EQI e descubra oportunidades com melhor relação risco x retorno.</p>
+    <form class="leadform" id="leadform">
+      <input id="l-nome" placeholder="Seu nome" required />
+      <input id="l-email" type="email" placeholder="Seu e-mail" required />
+      <input id="l-tel" placeholder="WhatsApp" required />
+      <button type="submit" class="btn btn-cta">Quero falar com um assessor</button>
+    </form>
+    <div class="leadok" id="leadok">✅ Recebemos seus dados! Um assessor EQI entrará em contato em breve.</div>
+  </div>
+
+  <p class="note">
+    <b>Metodologia:</b> Pós-fixado = (taxa/100) × CDI. Prefixado = taxa informada. Híbrido = capitalização composta entre o indexador (IPCA ou CDI) e a taxa: (1+índice)·(1+taxa)−1.
+    Rentabilidade líquida = rentabilidade bruta × (1 − alíquota de IR), exceto títulos isentos. As médias da carteira são <b>ponderadas pelo valor investido</b>.
+    “% do CDI líquido” normaliza todos os títulos a uma base comum após impostos.
+  </p>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disc">
+      Material meramente informativo e educacional, não constitui oferta, recomendação ou consultoria de investimentos. CDI e IPCA são parâmetros editáveis informados pelo usuário; rentabilidades passadas não garantem resultados futuros. Renda fixa pode ter risco de crédito e marcação a mercado.
+      © EQI Investimentos.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const fmtBRL = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+  const fmtPct = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
+  const fmtDate = s => s ? new Date(s+'T00:00:00').toLocaleDateString('pt-BR') : '—';
+  const fmtCompact = v => {
+    if(v>=1e6) return 'R$ '+(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+'M';
+    if(v>=1e3) return 'R$ '+(v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+'k';
+    return fmtBRL(v);
+  };
+
+  // Alíquota de IR regressiva pelo prazo de aplicação
+  function calcIRAliq(aquisicao){
+    if(!aquisicao) return null; // null = usar padrão do seletor global
+    const today=new Date(); today.setHours(0,0,0,0);
+    const days=Math.floor((today-new Date(aquisicao+'T00:00:00'))/86400000);
+    if(days<=180) return 0.225;
+    if(days<=360) return 0.20;
+    if(days<=720) return 0.175;
+    return 0.15;
+  }
+  function getAliq(asset, defaultAliq){
+    if(asset.isento) return 0;
+    const auto=calcIRAliq(asset.aquisicao);
+    return auto!==null ? auto : defaultAliq;
+  }
+  function irTag(asset, defaultAliq){
+    if(asset.isento) return '<span class="pill isento">Isento</span>';
+    const auto=calcIRAliq(asset.aquisicao);
+    const aliq=auto!==null?auto:defaultAliq;
+    const pct=(aliq*100).toFixed(1).replace('.0','');
+    if(auto!==null) return '<span class="pill trib">'+pct+'% <small>auto</small></span>';
+    return '<span class="pill trib">'+pct+'%</span>';
+  }
+
+  const COLORS = ['#916EDC','#ED64A6','#EA4B4B','#74D9CE','#F6E05E','#54B27F','#387AB7','#6BDCF2','#9C9C9C','#7F7F7F','#585858','#313131','#141414','#F5F5F5','#E0E0E0'];
+  const ISENTO_DEFAULT = {
+    'CRA':true,'CRI':true,'LCI':true,'LCA':true,'Debênture Incentivada':true,
+    'CDB':false,'Debênture':false,'Tesouro Selic':false,'Tesouro IPCA+':false,
+    'Tesouro Prefixado':false,'LC':false
+  };
+
+  let assets = [];
+  try { assets = JSON.parse(localStorage.getItem('eqi_rf_assets')||'[]'); } catch(e){ assets=[]; }
+  const save = () => localStorage.setItem('eqi_rf_assets', JSON.stringify(assets));
+
+  // ---- cálculo de rendimento bruto (% a.a.) ----
+  function brutaAA(a, cdi, ipca){
+    const t = a.taxa/100;
+    if(a.rem==='pre') return a.taxa;                       // prefixado: taxa fixa
+    if(a.rem==='pos'){                                     // pós: % do indexador
+      const base = a.idx==='IPCA' ? ipca : cdi;
+      return (a.taxa/100)*base;
+    }
+    // híbrido: composto índice + spread
+    const base = a.idx==='IPCA' ? ipca : cdi;
+    return ((1+base/100)*(1+t)-1)*100;
+  }
+
+  function remLabel(a){
+    if(a.rem==='pre') return 'Prefixado '+fmtPct(a.taxa);
+    if(a.rem==='pos') return fmtPct(a.taxa).replace('%','%')+' do '+(a.idx||'CDI');
+    return (a.idx||'CDI')+' + '+fmtPct(a.taxa);
+  }
+
+  // ---- formulário dinâmico ----
+  function syncForm(){
+    const rem = $('f-rem').value, idx = $('f-idx');
+    const taxa = $('f-taxa'), lbl = $('lbl-taxa'), help = $('taxa-help');
+    if(rem==='pre'){
+      idx.value=''; idx.disabled=true;
+      lbl.textContent='Taxa prefixada (% a.a.)';
+      taxa.placeholder='Ex.: 12';
+      help.textContent='Prefixado: rende a taxa fixa contratada, independente de CDI/IPCA.';
+    } else if(rem==='pos'){
+      idx.disabled=false; if(idx.value==='') idx.value='CDI';
+      lbl.textContent='Taxa (% do indexador)';
+      taxa.placeholder='Ex.: 105';
+      help.textContent='Pós-fixado: rende um percentual do indexador. Ex.: 105 = 105% do CDI.';
+    } else {
+      idx.disabled=false; if(idx.value==='') idx.value='IPCA';
+      lbl.textContent='Spread (% a.a.)';
+      taxa.placeholder='Ex.: 7';
+      help.textContent='Híbrido: indexador + taxa. Ex.: IPCA + 7%.';
+    }
+  }
+
+  function onTipoChange(){
+    const tipo = $('f-tipo').value;
+    $('f-isento').checked = !!ISENTO_DEFAULT[tipo];
+    // presets convenientes
+    if(tipo==='Tesouro Selic'){ $('f-rem').value='pos'; syncForm(); $('f-idx').value='CDI'; $('f-taxa').value=100; }
+    if(tipo==='Tesouro IPCA+'){ $('f-rem').value='hibrido'; syncForm(); $('f-idx').value='IPCA'; }
+    if(tipo==='Tesouro Prefixado'){ $('f-rem').value='pre'; syncForm(); }
+  }
+
+  // ---- render ----
+  function render(){
+    const cdi = parseFloat($('cdi').value)||0;
+    const ipca = parseFloat($('ipca').value)||0;
+    const aliq = parseFloat($('irprazo').value)||0;
+
+    const tbody = $('tbody'), tfoot = $('tfoot'), emptyBd = $('empty-bd');
+    tbody.innerHTML='';
+
+    const total = assets.reduce((s,a)=>s+(a.valor||0),0);
+
+    if(assets.length===0){
+      tfoot.style.display='none'; emptyBd.style.display='block';
+      $('kpi-liq').textContent='—'; $('kpi-liq-cdi').textContent='Adicione títulos para calcular';
+      $('kpi-total').textContent='R$ 0'; $('kpi-qtd').textContent='0 títulos';
+      $('kpi-bruta').textContent='—'; $('kpi-bruta-cdi').textContent='—';
+      drawDonut([]); drawLiquidityChart(); return;
+    }
+    emptyBd.style.display='none'; tfoot.style.display='';
+
+    let sumBruta=0, sumLiq=0;
+    const slices=[];
+
+    assets.forEach((a,i)=>{
+      const bruta = brutaAA(a,cdi,ipca);
+      const assetAliq = getAliq(a, aliq);
+      const liq = a.isento ? bruta : bruta*(1-assetAliq);
+      const peso = total>0 ? a.valor/total : 0;
+      const pctCDIliq = cdi>0 ? (liq/cdi*100) : 0;
+      sumBruta += bruta*a.valor;
+      sumLiq   += liq*a.valor;
+      slices.push({label:a.nome||a.tipo, value:a.valor, color:COLORS[i%COLORS.length]});
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>'+
+          '<div class="asset-n">'+(a.nome||'(sem nome)')+'</div>'+
+          '<div class="asset-t">'+a.tipo+'</div>'+
+          (a.aquisicao?'<div class="asset-t">Aquis.: '+fmtDate(a.aquisicao)+'</div>':'')+
+        '</td>'+
+        '<td>'+remLabel(a)+'</td>'+
+        '<td>'+fmtBRL(a.valor)+'</td>'+
+        '<td>'+(peso*100).toFixed(1)+'%</td>'+
+        '<td>'+fmtDate(a.vencimento)+'</td>'+
+        '<td>'+irTag(a,aliq)+'</td>'+
+        '<td>'+fmtPct(bruta)+'</td>'+
+        '<td><b>'+fmtPct(liq)+'</b></td>'+
+        '<td>'+pctCDIliq.toFixed(1)+'%</td>'+
+        '<td><button class="delx" data-i="'+i+'" title="Remover">✕</button></td>';
+      tbody.appendChild(tr);
+    });
+
+    const brutaCart = sumBruta/total;
+    const liqCart   = sumLiq/total;
+    const cdiLiqCart = cdi>0 ? (liqCart/cdi*100) : 0;
+
+    $('ft-valor').textContent=fmtBRL(total);
+    $('ft-bruta').textContent=fmtPct(brutaCart);
+    $('ft-liq').textContent=fmtPct(liqCart);
+    $('ft-cdi').textContent=cdiLiqCart.toFixed(1)+'%';
+
+    $('kpi-liq').textContent=fmtPct(liqCart);
+    $('kpi-liq-cdi').innerHTML='Equivale a <b>'+cdiLiqCart.toFixed(1)+'% do CDI</b> líquido';
+    $('kpi-total').textContent=fmtBRL(total);
+    $('kpi-qtd').textContent=assets.length+(assets.length===1?' título':' títulos');
+    $('kpi-bruta').textContent=fmtPct(brutaCart);
+    $('kpi-bruta-cdi').textContent=cdi>0?(brutaCart/cdi*100).toFixed(1)+'% do CDI (bruto)':'—';
+
+    drawDonut(slices);
+    drawLiquidityChart();
+
+    tbody.querySelectorAll('.delx').forEach(b=>b.onclick=()=>{
+      assets.splice(parseInt(b.dataset.i),1); save(); render();
+    });
+  }
+
+  // ---- donut SVG ----
+  function drawDonut(slices){
+    const svg=$('donut'), legend=$('legend');
+    svg.innerHTML=''; legend.innerHTML='';
+    const total = slices.reduce((s,x)=>s+x.value,0);
+    if(total===0){
+      svg.innerHTML='<circle cx="21" cy="21" r="15.9" fill="none" stroke="#e9eef6" stroke-width="6"></circle>';
+      return;
+    }
+    let offset=25; // começa no topo
+    slices.forEach(s=>{
+      const pct=s.value/total*100;
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx','21'); c.setAttribute('cy','21'); c.setAttribute('r','15.9155');
+      c.setAttribute('fill','none'); c.setAttribute('stroke',s.color); c.setAttribute('stroke-width','6');
+      c.setAttribute('stroke-dasharray',pct+' '+(100-pct));
+      c.setAttribute('stroke-dashoffset',offset);
+      svg.appendChild(c);
+      offset = (offset - pct + 100) % 100;
+      const li=document.createElement('div');
+      li.className='li';
+      li.innerHTML='<span class="dot" style="background:'+s.color+'"></span>'+s.label+'<span class="pct">'+pct.toFixed(0)+'%</span>';
+      legend.appendChild(li);
+    });
+  }
+
+  // ---- add ----
+  function add(){
+    const nome=$('f-nome').value.trim();
+    const tipo=$('f-tipo').value;
+    const valor=parseFloat($('f-valor').value);
+    const rem=$('f-rem').value;
+    const idx=$('f-idx').value;
+    const taxa=parseFloat($('f-taxa').value);
+    if(!(valor>0)){ alert('Informe o valor investido.'); $('f-valor').focus(); return; }
+    if(!(taxa>=0) || isNaN(taxa)){ alert('Informe a taxa.'); $('f-taxa').focus(); return; }
+    const aquisicao=$('f-aquisicao').value||'';
+    const vencimento=$('f-vencimento').value||'';
+    assets.push({nome,tipo,valor,rem,idx:rem==='pre'?'':idx,taxa,isento:$('f-isento').checked,aquisicao,vencimento});
+    save(); render();
+    $('f-nome').value=''; $('f-valor').value=''; $('f-taxa').value='';
+    $('f-aquisicao').value=''; $('f-vencimento').value=''; $('f-nome').focus();
+  }
+
+  // ---- exemplo ----
+  function exemplo(){
+    assets = [
+      {nome:'Marfrig', tipo:'CRA', valor:10000, rem:'hibrido', idx:'IPCA', taxa:10, isento:true, aquisicao:'2023-03-15', vencimento:'2028-09-30'},
+      {nome:'Banco do Brasil', tipo:'CDB', valor:15000, rem:'pos', idx:'CDI', taxa:105, isento:false, aquisicao:'2024-06-01', vencimento:'2026-12-15'},
+      {nome:'Tesouro Selic 2029', tipo:'Tesouro Selic', valor:30000, rem:'pos', idx:'CDI', taxa:100, isento:false, aquisicao:'2022-09-01', vencimento:'2029-03-01'}
+    ];
+    save(); render();
+  }
+
+  // ================== EXPORTAÇÃO PARA EXCEL (.xlsx) ==================
+  // Gera um .xlsx real no navegador, sem nenhuma dependência externa.
+
+  const round = (v,d)=>{const p=Math.pow(10,d);return Math.round((+v)*p)/p;};
+
+  function exportExcel(){
+    if(assets.length===0){ alert('Adicione títulos à carteira antes de exportar.'); return; }
+    const cdi=parseFloat($('cdi').value)||0, ipca=parseFloat($('ipca').value)||0, aliq=parseFloat($('irprazo').value)||0;
+    const total=assets.reduce((s,a)=>s+(a.valor||0),0);
+    const S=v=>({v:v,t:'s'}), N=v=>({v:Number(v),t:'n'});
+
+    const rows=[];
+    rows.push([S('Consolidador de Carteira de Renda Fixa — EQI Investimentos')]);
+    rows.push([S('Data'),S(new Date().toLocaleDateString('pt-BR')),S('CDI (% a.a.)'),N(cdi),S('IPCA (% a.a.)'),N(ipca),S('IR (%)'),N(round(aliq*100,1))]);
+    rows.push([]);
+    rows.push([S('Ativo'),S('Tipo'),S('Remuneração'),S('Valor (R$)'),S('% Carteira'),S('Data Aquisição'),S('Data Vencimento'),S('Alíquota IR (%)'),S('Bruta a.a. (%)'),S('Líquida a.a. (%)'),S('% CDI líquido')]);
+
+    let sumB=0,sumL=0;
+    assets.forEach(a=>{
+      const assetAliq=getAliq(a,aliq);
+      const b=brutaAA(a,cdi,ipca), l=a.isento?b:b*(1-assetAliq);
+      const peso=total>0?a.valor/total*100:0, cdiliq=cdi>0?l/cdi*100:0;
+      sumB+=b*a.valor; sumL+=l*a.valor;
+      rows.push([S(a.nome||''),S(a.tipo),S(remLabel(a)),N(a.valor),N(round(peso,1)),
+                 S(a.aquisicao?fmtDate(a.aquisicao):''),S(a.vencimento?fmtDate(a.vencimento):''),
+                 N(a.isento?0:round(assetAliq*100,1)),N(round(b,2)),N(round(l,2)),N(round(cdiliq,1))]);
+    });
+    const bC=sumB/total, lC=sumL/total, cC=cdi>0?lC/cdi*100:0;
+    rows.push([S('CARTEIRA CONSOLIDADA'),S(''),S(''),N(total),N(100),S(''),S(''),S(''),N(round(bC,2)),N(round(lC,2)),N(round(cC,1))]);
+
+    downloadBlob(buildXlsxBlob(rows),'carteira-renda-fixa-eqi.xlsx');
+  }
+
+  function colLetter(n){let s='';n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-m-1)/26;}return s;}
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  function sheetXml(rows){
+    let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+    rows.forEach((row,ri)=>{
+      x+='<row r="'+(ri+1)+'">';
+      row.forEach((cell,ci)=>{
+        if(cell==null) return;
+        const ref=colLetter(ci)+(ri+1);
+        if(cell.t==='n' && cell.v!=='' && !isNaN(cell.v)){
+          x+='<c r="'+ref+'"><v>'+cell.v+'</v></c>';
+        } else {
+          x+='<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+esc(cell.v)+'</t></is></c>';
+        }
+      });
+      x+='</row>';
+    });
+    return x+'</sheetData></worksheet>';
+  }
+
+  function buildXlsxBlob(rows){
+    const enc=new TextEncoder();
+    const F=(name,str)=>({name:name,data:enc.encode(str)});
+    const files=[
+      F('[Content_Types].xml',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+        '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'+
+        '<Default Extension="xml" ContentType="application/xml"/>'+
+        '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+
+        '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'),
+      F('_rels/.rels',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'),
+      F('xl/workbook.xml',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+        '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'+
+        '<sheets><sheet name="Carteira" sheetId="1" r:id="rId1"/></sheets></workbook>'),
+      F('xl/_rels/workbook.xml.rels',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'),
+      F('xl/worksheets/sheet1.xml', sheetXml(rows))
+    ];
+    return new Blob([zipStore(files)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  }
+
+  // ZIP "stored" (sem compressão) + CRC32 — suficiente e robusto para arquivos pequenos.
+  let CRCT;
+  function crc32(u8){
+    if(!CRCT){CRCT=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);CRCT[n]=c>>>0;}}
+    let crc=-1;
+    for(let i=0;i<u8.length;i++)crc=(crc>>>8)^CRCT[(crc^u8[i])&0xFF];
+    return (crc^-1)>>>0;
+  }
+  function zipStore(files){
+    const out=[],cen=[];
+    const u16=(a,v)=>a.push(v&0xff,(v>>>8)&0xff);
+    const u32=(a,v)=>a.push(v&0xff,(v>>>8)&0xff,(v>>>16)&0xff,(v>>>24)&0xff);
+    const enc=new TextEncoder();
+    files.forEach(f=>{
+      const data=f.data, crc=crc32(data), nm=enc.encode(f.name), off=out.length;
+      u32(out,0x04034b50);u16(out,20);u16(out,0);u16(out,0);u16(out,0);u16(out,0);
+      u32(out,crc);u32(out,data.length);u32(out,data.length);u16(out,nm.length);u16(out,0);
+      for(let i=0;i<nm.length;i++)out.push(nm[i]);
+      for(let i=0;i<data.length;i++)out.push(data[i]);
+      u32(cen,0x02014b50);u16(cen,20);u16(cen,20);u16(cen,0);u16(cen,0);u16(cen,0);u16(cen,0);
+      u32(cen,crc);u32(cen,data.length);u32(cen,data.length);
+      u16(cen,nm.length);u16(cen,0);u16(cen,0);u16(cen,0);u16(cen,0);u32(cen,0);u32(cen,off);
+      for(let i=0;i<nm.length;i++)cen.push(nm[i]);
+    });
+    const cdOff=out.length;
+    for(let i=0;i<cen.length;i++)out.push(cen[i]);
+    u32(out,0x06054b50);u16(out,0);u16(out,0);u16(out,files.length);u16(out,files.length);
+    u32(out,cen.length);u32(out,cdOff);u16(out,0);
+    return new Uint8Array(out);
+  }
+  function downloadBlob(blob,name){
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  // ==================================================================
+
+  // ---- gráfico de liquidez por semestre ----
+  function drawLiquidityChart(){
+    const wrap=$('chart-liquidez-wrap'), noteEl=$('chart-liquidez-note');
+    if(!wrap) return;
+
+    // Monta os 10 semestres a partir de hoje
+    const today=new Date(); today.setHours(0,0,0,0);
+    const semesters=[];
+    let cur=new Date(today.getFullYear(), today.getMonth()<6?0:6, 1);
+    for(let i=0;i<10;i++){
+      const endSem=new Date(cur.getFullYear(), cur.getMonth()+6, 0);
+      const label=(cur.getMonth()===0?'1S':'2S')+'/'+cur.getFullYear();
+      semesters.push({key:label, start:new Date(cur), end:new Date(endSem), value:0});
+      cur=new Date(cur.getFullYear(), cur.getMonth()+6, 1);
+    }
+
+    let withoutDate=0;
+    assets.forEach(a=>{
+      if(!a.vencimento){ withoutDate++; return; }
+      const mat=new Date(a.vencimento+'T00:00:00');
+      const bkt=semesters.find(s=>mat>=s.start && mat<=s.end);
+      if(bkt) bkt.value+=(a.valor||0);
+    });
+
+    const hasData=semesters.some(s=>s.value>0);
+    if(!hasData){
+      wrap.innerHTML='<div class="empty" style="padding:20px 0;text-align:center"><b>Adicione datas de vencimento</b><br>Preencha a data de vencimento nos títulos para ver a liquidez projetada por semestre.</div>';
+      noteEl.textContent=''; return;
+    }
+
+    const maxVal=Math.max(...semesters.map(s=>s.value),1);
+    let html='<div class="barchart"><div class="barchart-bars">';
+    semesters.forEach(s=>{
+      const pct=s.value>0?Math.max(s.value/maxVal*100,3):0;
+      html+=
+        '<div class="bar-col">'+
+          '<div class="bar-amount">'+(s.value>0?fmtCompact(s.value):'')+'</div>'+
+          '<div class="bar-wrap">'+
+            '<div class="bar-fill" style="height:'+pct+'%'+(s.value===0?';background:#e9eef6':'')+'"></div>'+
+          '</div>'+
+          '<div class="bar-label">'+s.key+'</div>'+
+        '</div>';
+    });
+    html+='</div></div>';
+    wrap.innerHTML=html;
+
+    const n=assets.filter(a=>a.vencimento).length;
+    noteEl.textContent=withoutDate>0
+      ?n+' título(s) com vencimento exibido(s). '+withoutDate+' título(s) sem data de vencimento foram omitidos.'
+      :'';
+  }
+
+  // ---- listeners ----
+  $('f-rem').addEventListener('change',syncForm);
+  $('f-tipo').addEventListener('change',onTipoChange);
+  $('btn-add').addEventListener('click',add);
+  $('btn-exemplo').addEventListener('click',exemplo);
+  $('btn-limpar').addEventListener('click',()=>{ if(confirm('Remover todos os títulos?')){assets=[];save();render();} });
+  $('btn-xlsx').addEventListener('click',exportExcel);
+  ['cdi','ipca','irprazo'].forEach(id=>$(id).addEventListener('input',render));
+  $('leadform').addEventListener('submit',e=>{
+    e.preventDefault();
+    $('leadform').style.display='none';
+    $('leadok').style.display='block';
+    // Aqui você integra com seu CRM / endpoint de captura de leads.
+  });
+
+  syncForm();
+  render();
+})();
+</script>
+</body>
+</html>
