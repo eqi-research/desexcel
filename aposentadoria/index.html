@@ -122,6 +122,28 @@
     font-weight: 400;
   }
 
+  /* ─── CARD COMPACTO (idade atual) ────────────────────────── */
+  .card-compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 28px;
+    flex-wrap: wrap;
+  }
+  .card-compact h2 { margin: 0; }
+  .idade-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .idade-input input { width: 110px; }
+  .idade-input .unit {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
   /* ─── INPUTS ─────────────────────────────────────────────── */
   input[type=number] {
     width: 180px;
@@ -426,12 +448,14 @@
   </header>
 
   <!-- CARD: IDADE ATUAL (compartilhada) -->
-  <div class="card">
-    <span class="chapeu">↗ Você</span>
-    <h2>Sua idade atual</h2>
-    <div class="row">
-      <label for="idadeAtual">Sua idade hoje (em anos)</label>
+  <div class="card card-compact">
+    <div>
+      <span class="chapeu">↗ Você</span>
+      <h2>Sua idade atual</h2>
+    </div>
+    <div class="idade-input">
       <input type="number" id="idadeAtual" value="30" min="18" max="80" step="1">
+      <span class="unit">anos</span>
     </div>
   </div>
 
