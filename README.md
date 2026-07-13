@@ -12,8 +12,11 @@ Acesso público: https://eqi-research.github.io/desexcel/ *(precisa habilitar Gi
 desexcel/
 ├── index.html                          ← landing: lista de ferramentas
 ├── imoveisxrendafixa/
-│   ├── index.html                      ← a calculadora
-│   └── config.js                       ← URL do logger (Google Apps Script)
+│   ├── index.html                      ← calculadora de imóveis x renda fixa
+│   └── config.js                       ← URL do logger
+├── aposentadoria/
+│   ├── index.html                      ← calculadora de salário na aposentadoria
+│   └── config.js                       ← URL do logger
 ├── SETUP_GOOGLE_SHEETS.md              ← passo a passo do backend de logs
 └── README.md
 ```
@@ -29,10 +32,14 @@ Convenção pra novas ferramentas: `desexcel/<nomedaferramenta>/index.html`. Lin
 
 Compara a rentabilidade de um imóvel alugado com 3 opções de renda fixa (CDB 100% CDI, IPCA+10%, Prefixado 18% a.a.). Considera a Tabela Regressiva do IR sobre o aluguel e alíquota de 17,5% pra renda fixa acima de 360 dias.
 
-**Recursos:**
-- Premissas editáveis (IPCA, CDI, spread, prefixado, alíquota)
+### 02. Calculadora de Salário na Aposentadoria
+[`aposentadoria/`](./aposentadoria/)
+
+Simula três cenários de planejamento pra viver de renda. Projeção mensal do patrimônio até 100 anos, considerando aportes, retiradas corrigidas pela inflação e retorno real. Mostra o patrimônio na aposentadoria, quando o dinheiro acaba e a curva de evolução patrimonial.
+
+**Recursos comuns:**
 - Botão "Calcular" — disparo explícito
-- Exportação dos resultados em PDF (via `html2pdf.js`)
+- Exportação dos resultados em PDF (via `jsPDF`)
 - Registro automático de cada cálculo num Google Sheets (anônimo)
 
 ---

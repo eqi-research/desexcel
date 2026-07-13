@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Salário na Aposentadoria — EQI Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --off-white:        #FFFAFA;
+    --neutro-claro:     #F2EDED;
+    --neutro-verde:     #D9E3E0;
+    --verde-claro:      #63C6A5;
+    --verde:            #009E76;
+    --verde-escuro:     #004031;
+    --verde-muito-esc:  #00291E;
+    --ink:              var(--verde-muito-esc);
+    --muted:            #5a6b66;
+    --line:             #D9E3E0;
+    --warn:             #b85c3a;
+    --ff: 'Aeonik', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--ff);
+    background: var(--off-white);
+    color: var(--ink);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────── */
+  header.brand {
+    background: var(--verde-muito-esc);
+    color: var(--off-white);
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 28px;
+  }
+  .brand-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+  .brand-mark { font-weight: 700; color: var(--verde-claro); letter-spacing: 0.04em; font-size: 14px; }
+  .brand-mark span { color: var(--off-white); opacity: 0.65; font-weight: 400; margin-left: 8px; }
+  .back-link {
+    color: var(--verde-claro);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+  }
+  .back-link:hover { opacity: 1; }
+  header.brand h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    max-width: 820px;
+  }
+  header.brand h1 .arrow { color: var(--verde-claro); margin-right: 6px; }
+  .brand-sub { margin-top: 14px; font-size: 14px; opacity: 0.75; max-width: 720px; }
+
+  .chapeu {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin-bottom: 4px;
+  }
+
+  .card {
+    background: var(--off-white);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    margin-top: 20px;
+  }
+  .card:first-of-type { margin-top: 0; }
+  .card h2 {
+    margin: 0 0 22px;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .card h2 .arrow { color: var(--verde-claro); margin-right: 4px; }
+
+  /* ─── ROW COMPARTILHADA (idade atual) ────────────────────── */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: none; }
+  .row label {
+    color: var(--muted);
+    font-size: 13px;
+    flex: 1;
+    font-weight: 400;
+  }
+
+  /* ─── INPUTS ─────────────────────────────────────────────── */
+  input[type=number] {
+    width: 180px;
+    padding: 10px 12px;
+    border: 1px solid var(--verde-claro);
+    background: rgba(99,198,165,0.10);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    text-align: right;
+    color: var(--verde-muito-esc);
+    font-variant-numeric: tabular-nums;
+    transition: all 0.15s;
+  }
+  input[type=number]:focus {
+    outline: none;
+    border-color: var(--verde);
+    background: rgba(99,198,165,0.18);
+    box-shadow: 0 0 0 3px rgba(0,158,118,0.15);
+  }
+
+  /* ─── SCENARIOS GRID ─────────────────────────────────────── */
+  .scenarios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+  }
+  @media (max-width: 900px) { .scenarios { grid-template-columns: 1fr; } }
+
+  .sc-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    background: #fbfdfc;
+  }
+  .sc-card h3 {
+    margin: 0 0 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--verde);
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sc-card h3 .badge {
+    background: var(--verde);
+    color: var(--off-white);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .sc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .sc-field label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .sc-field input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  /* ─── BOTÃO CALCULAR ─────────────────────────────────────── */
+  .calc-wrap {
+    margin-top: 28px;
+    text-align: center;
+  }
+  .calc-hint {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .btn-calcular {
+    background: var(--verde);
+    color: var(--off-white);
+    border: none;
+    padding: 20px 64px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(0,158,118,0.25);
+  }
+  .btn-calcular:hover {
+    background: var(--verde-escuro);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,64,49,0.3);
+  }
+  .btn-calcular .arrow { margin-right: 10px; color: var(--verde-claro); }
+  body.results-hidden .result-block { display: none !important; }
+
+  /* ─── LOG STATUS ─────────────────────────────────────────── */
+  .log-status {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .log-status.visible { opacity: 0.7; }
+  .log-status.ok::before    { content: '●'; color: var(--verde); margin-right: 6px; }
+  .log-status.fail::before  { content: '●'; color: var(--warn);  margin-right: 6px; }
+
+  /* ─── RESULTADOS ─────────────────────────────────────────── */
+  .results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 20px;
+  }
+  @media (max-width: 900px) { .results { grid-template-columns: 1fr; } }
+
+  .res-card {
+    border-radius: 12px;
+    padding: 22px;
+    background: var(--verde-escuro);
+    color: var(--off-white);
+  }
+  .res-card h3 {
+    margin: 0 0 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--verde-claro);
+    font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,250,250,0.15);
+  }
+  .res-line {
+    margin: 12px 0;
+  }
+  .res-line .lbl {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,250,250,0.55);
+    margin-bottom: 4px;
+  }
+  .res-line .big {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--off-white);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .res-line .big.hi { color: var(--verde-claro); }
+  .res-line .sub {
+    font-size: 11px;
+    color: rgba(255,250,250,0.6);
+    margin-top: 2px;
+  }
+  .res-line .warn { color: #ff9b7a; }
+
+  /* ─── GRÁFICO ────────────────────────────────────────────── */
+  .chart-wrap { margin-top: 20px; }
+  .chart-legend {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .chart-legend span::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .chart-legend .a::before { background: #009E76; }
+  .chart-legend .b::before { background: #63C6A5; }
+  .chart-legend .c::before { background: #004031; }
+  .chart-legend .r::before {
+    background: transparent;
+    border-top: 1.5px dashed var(--muted);
+    height: 0;
+  }
+  svg.chart {
+    width: 100%;
+    height: 340px;
+    display: block;
+  }
+
+  /* ─── ACTION BAR (Exportar PDF) ──────────────────────────── */
+  .action-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--verde);
+    border: 1.5px solid var(--verde);
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-secondary:hover { background: var(--verde); color: var(--off-white); }
+  .btn-secondary:disabled { opacity: 0.5; cursor: wait; }
+
+  /* ─── NOTAS ──────────────────────────────────────────────── */
+  .notes {
+    background: var(--neutro-claro);
+    border-left: 3px solid var(--verde);
+    padding: 22px 26px;
+    border-radius: 10px;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--verde-escuro);
+    line-height: 1.55;
+  }
+  .notes h3 {
+    margin: 0 0 12px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--verde);
+  }
+  .notes ul { margin: 0; padding-left: 20px; }
+  .notes li { margin: 6px 0; }
+
+  /* ─── CTA ────────────────────────────────────────────────── */
+  .cta {
+    background: var(--verde);
+    color: var(--off-white);
+    text-align: center;
+    padding: 22px 28px;
+    border-radius: 12px;
+    margin-top: 24px;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+    width: 100%;
+    font-family: inherit;
+  }
+  .cta:hover { background: var(--verde-escuro); }
+  .cta .arrow { display: inline-block; margin-left: 8px; transition: transform 0.2s; }
+  .cta:hover .arrow { transform: translate(4px, -4px); }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer .mark { color: var(--verde); font-weight: 700; }
+</style>
+</head>
+<body class="results-hidden">
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="brand">
+    <div class="brand-top">
+      <div class="brand-mark">EQI <span>Research</span></div>
+      <a href="../" class="back-link">← desexcel</a>
+    </div>
+    <h1><span class="arrow">↗</span>Salário na Aposentadoria</h1>
+    <p class="brand-sub">Simule três cenários de planejamento pra viver de renda: quando aposentar, quanto acumular e quanto seu dinheiro dura.</p>
+  </header>
+
+  <!-- CARD: IDADE ATUAL (compartilhada) -->
+  <div class="card">
+    <span class="chapeu">↗ Você</span>
+    <h2>Sua idade atual</h2>
+    <div class="row">
+      <label for="idadeAtual">Sua idade hoje (em anos)</label>
+      <input type="number" id="idadeAtual" value="30" min="18" max="80" step="1">
+    </div>
+  </div>
+
+  <!-- CARD: 3 CENÁRIOS -->
+  <div class="card">
+    <span class="chapeu">↗ Premissas</span>
+    <h2>Compare três cenários de aposentadoria</h2>
+
+    <div class="scenarios">
+      <!-- CENÁRIO A -->
+      <div class="sc-card">
+        <h3>Cenário A <span class="badge">A</span></h3>
+        <div class="sc-field">
+          <label for="a_idadeRenda">Idade para viver de renda</label>
+          <input type="number" id="a_idadeRenda" value="65" min="30" max="100" step="1">
+        </div>
+        <div class="sc-field">
+          <label for="a_patrimonio">Patrimônio atual investido (R$)</label>
+          <input type="number" id="a_patrimonio" value="500000" min="0" step="10000">
+        </div>
+        <div class="sc-field">
+          <label for="a_aporte">Aporte mensal (R$)</label>
+          <input type="number" id="a_aporte" value="10000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="a_retirada">Retirada mensal na renda (R$)</label>
+          <input type="number" id="a_retirada" value="20000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="a_retorno">Retorno dos investimentos (% a.a.)</label>
+          <input type="number" id="a_retorno" value="12" min="0" step="0.1">
+        </div>
+        <div class="sc-field">
+          <label for="a_inflacao">Inflação pessoal (% a.a.)</label>
+          <input type="number" id="a_inflacao" value="6" min="0" step="0.1">
+        </div>
+      </div>
+
+      <!-- CENÁRIO B -->
+      <div class="sc-card">
+        <h3>Cenário B <span class="badge">B</span></h3>
+        <div class="sc-field">
+          <label for="b_idadeRenda">Idade para viver de renda</label>
+          <input type="number" id="b_idadeRenda" value="70" min="30" max="100" step="1">
+        </div>
+        <div class="sc-field">
+          <label for="b_patrimonio">Patrimônio atual investido (R$)</label>
+          <input type="number" id="b_patrimonio" value="500000" min="0" step="10000">
+        </div>
+        <div class="sc-field">
+          <label for="b_aporte">Aporte mensal (R$)</label>
+          <input type="number" id="b_aporte" value="10000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="b_retirada">Retirada mensal na renda (R$)</label>
+          <input type="number" id="b_retirada" value="20000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="b_retorno">Retorno dos investimentos (% a.a.)</label>
+          <input type="number" id="b_retorno" value="12" min="0" step="0.1">
+        </div>
+        <div class="sc-field">
+          <label for="b_inflacao">Inflação pessoal (% a.a.)</label>
+          <input type="number" id="b_inflacao" value="6" min="0" step="0.1">
+        </div>
+      </div>
+
+      <!-- CENÁRIO C -->
+      <div class="sc-card">
+        <h3>Cenário C <span class="badge">C</span></h3>
+        <div class="sc-field">
+          <label for="c_idadeRenda">Idade para viver de renda</label>
+          <input type="number" id="c_idadeRenda" value="60" min="30" max="100" step="1">
+        </div>
+        <div class="sc-field">
+          <label for="c_patrimonio">Patrimônio atual investido (R$)</label>
+          <input type="number" id="c_patrimonio" value="500000" min="0" step="10000">
+        </div>
+        <div class="sc-field">
+          <label for="c_aporte">Aporte mensal (R$)</label>
+          <input type="number" id="c_aporte" value="10000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="c_retirada">Retirada mensal na renda (R$)</label>
+          <input type="number" id="c_retirada" value="20000" min="0" step="500">
+        </div>
+        <div class="sc-field">
+          <label for="c_retorno">Retorno dos investimentos (% a.a.)</label>
+          <input type="number" id="c_retorno" value="12" min="0" step="0.1">
+        </div>
+        <div class="sc-field">
+          <label for="c_inflacao">Inflação pessoal (% a.a.)</label>
+          <input type="number" id="c_inflacao" value="6" min="0" step="0.1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÃO CALCULAR -->
+  <div class="calc-wrap">
+    <p class="calc-hint" id="calcHint">↗ Preencha as premissas e clique em calcular</p>
+    <button class="btn-calcular" id="btnCalcular"><span class="arrow">↗</span>Calcular</button>
+    <div class="log-status" id="logStatus"></div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="card result-block">
+    <span class="chapeu">↗ Resultados</span>
+    <h2>Compare os três cenários</h2>
+    <div class="results">
+      <div class="res-card">
+        <h3>Cenário A</h3>
+        <div class="res-line">
+          <div class="lbl">Patrimônio na aposentadoria</div>
+          <div class="big hi" id="a_patRenda">—</div>
+          <div class="sub" id="a_patRendaSub">—</div>
+        </div>
+        <div class="res-line">
+          <div class="lbl">Seu dinheiro acaba aos</div>
+          <div class="big" id="a_zeragem">—</div>
+          <div class="sub" id="a_zeragemSub">—</div>
+        </div>
+      </div>
+      <div class="res-card">
+        <h3>Cenário B</h3>
+        <div class="res-line">
+          <div class="lbl">Patrimônio na aposentadoria</div>
+          <div class="big hi" id="b_patRenda">—</div>
+          <div class="sub" id="b_patRendaSub">—</div>
+        </div>
+        <div class="res-line">
+          <div class="lbl">Seu dinheiro acaba aos</div>
+          <div class="big" id="b_zeragem">—</div>
+          <div class="sub" id="b_zeragemSub">—</div>
+        </div>
+      </div>
+      <div class="res-card">
+        <h3>Cenário C</h3>
+        <div class="res-line">
+          <div class="lbl">Patrimônio na aposentadoria</div>
+          <div class="big hi" id="c_patRenda">—</div>
+          <div class="sub" id="c_patRendaSub">—</div>
+        </div>
+        <div class="res-line">
+          <div class="lbl">Seu dinheiro acaba aos</div>
+          <div class="big" id="c_zeragem">—</div>
+          <div class="sub" id="c_zeragemSub">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRÁFICO -->
+  <div class="card result-block">
+    <span class="chapeu">↗ Evolução patrimonial</span>
+    <h2>Como seu patrimônio se comporta ao longo do tempo</h2>
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <span class="a">Cenário A</span>
+        <span class="b">Cenário B</span>
+        <span class="c">Cenário C</span>
+        <span class="r">Idade de aposentar</span>
+      </div>
+      <svg class="chart" id="chart" viewBox="0 0 800 340" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar result-block">
+    <button class="btn-secondary" id="btnExportPdf">
+      <span>↓</span>Exportar simulação em PDF
+    </button>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="notes">
+    <h3>↗ Observações</h3>
+    <ul>
+      <li>A simulação projeta mês a mês o patrimônio até 100 anos ou até esgotar.</li>
+      <li>Os aportes ocorrem até a idade escolhida para viver de renda; a partir dela, começam as retiradas.</li>
+      <li>A retirada mensal é corrigida pela inflação pessoal ao longo do tempo.</li>
+      <li>O retorno real é calculado como (1 + retorno) ÷ (1 + inflação) − 1.</li>
+      <li>A simulação não considera impostos, aportes irregulares, liquidez do patrimônio ou outros aspectos do seu planejamento. Consulte a EQI para uma análise personalizada.</li>
+    </ul>
+  </div>
+
+  <!-- CTA -->
+  <button class="cta">Fale com a EQI e faça o seu planejamento de aposentadoria<span class="arrow">↗</span></button>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>© EQI · v1.0 2025 · SC ↔ BR</div>
+    <div class="mark">EQI Research</div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+
+const fmtBRL = (v) => isFinite(v)
+  ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+  : '—';
+const fmtInt = (v) => isFinite(v)
+  ? Math.round(v).toLocaleString('pt-BR')
+  : '—';
+
+// ─── SIMULAÇÃO MÊS A MÊS (fiel à planilha original) ──────────
+// Cada linha representa 1 mês. Para cada mês:
+//   Rendimento = PL_inicial × retorno_real_mensal
+//   Aportes    = se idade < idade_renda: aporte, senão 0
+//   Saques     = se idade >= idade_renda: retirada × (1 + inflação_mensal)^(anos_transcorridos)
+//   PL_final   = PL_inicial + Rendimento + Aportes − Saques
+function simulate(inputs) {
+  const {
+    idadeAtual, idadeRenda, patrimonio, aporte, retirada, retornoAno, inflacaoAno
+  } = inputs;
+
+  const retornoMes  = Math.pow(1 + retornoAno,  1/12) - 1;
+  const inflacaoMes = Math.pow(1 + inflacaoAno, 1/12) - 1;
+  const retornoRealMes = (1 + retornoMes) / (1 + inflacaoMes) - 1;
+
+  const rows = [];
+  let pl = Math.max(0, patrimonio);
+  const maxMeses = (100 - idadeAtual) * 12; // até 100 anos
+  let zeragemAge = null;
+
+  for (let mes = 0; mes < maxMeses; mes++) {
+    const age = idadeAtual + mes / 12;
+    const rendimento = pl * retornoRealMes;
+    const aportes = age < idadeRenda ? aporte : 0;
+    const anos = mes / 12;
+    const saque = age >= idadeRenda ? retirada * Math.pow(1 + inflacaoMes, anos) : 0;
+    const plFinal = pl + rendimento + aportes - saque;
+
+    rows.push({ mes, age, pl, rendimento, aportes, saque, plFinal });
+
+    if (zeragemAge === null && plFinal <= 0 && age >= idadeRenda) {
+      zeragemAge = age;
+    }
+    pl = plFinal;
+    if (pl <= 0 && age >= idadeRenda) break;
+  }
+
+  // Patrimônio na idade de aposentar: última linha antes/em idadeRenda
+  let patRenda = 0;
+  for (const r of rows) {
+    if (r.age <= idadeRenda) patRenda = r.plFinal;
+    else break;
+  }
+
+  return { rows, patRenda, zeragemAge };
+}
+
+function readInputs(prefix) {
+  return {
+    idadeRenda:  parseFloat($(prefix + '_idadeRenda').value) || 0,
+    patrimonio:  parseFloat($(prefix + '_patrimonio').value) || 0,
+    aporte:      parseFloat($(prefix + '_aporte').value)     || 0,
+    retirada:    parseFloat($(prefix + '_retirada').value)   || 0,
+    retornoAno:  (parseFloat($(prefix + '_retorno').value)   || 0) / 100,
+    inflacaoAno: (parseFloat($(prefix + '_inflacao').value)  || 0) / 100
+  };
+}
+
+function calc() {
+  const idadeAtual = parseFloat($('idadeAtual').value) || 0;
+  const scenarios = ['a', 'b', 'c'].map(k => {
+    const inp = { idadeAtual, ...readInputs(k) };
+    const sim = simulate(inp);
+    return { key: k, inp, sim };
+  });
+
+  // Preenche resultados
+  scenarios.forEach(s => {
+    const { key, inp, sim } = s;
+    $(key + '_patRenda').textContent    = fmtBRL(sim.patRenda);
+    $(key + '_patRendaSub').textContent = 'aos ' + Math.round(inp.idadeRenda) + ' anos';
+
+    if (sim.zeragemAge !== null) {
+      const idadeZero = Math.floor(sim.zeragemAge);
+      const anosRenda = idadeZero - Math.round(inp.idadeRenda);
+      $(key + '_zeragem').textContent    = idadeZero + ' anos';
+      $(key + '_zeragem').classList.add('warn');
+      $(key + '_zeragem').classList.remove('hi');
+      $(key + '_zeragemSub').textContent = 'renda dura ' + anosRenda + ' anos';
+    } else {
+      $(key + '_zeragem').textContent    = 'Não zera';
+      $(key + '_zeragem').classList.remove('warn');
+      $(key + '_zeragem').classList.add('hi');
+      $(key + '_zeragemSub').textContent = 'patrimônio suporta até 100 anos';
+    }
+  });
+
+  drawChart(idadeAtual, scenarios);
+
+  return { timestamp: new Date().toISOString(), idadeAtual, scenarios };
+}
+
+// ─── GRÁFICO SVG ─────────────────────────────────────────────
+function drawChart(idadeAtual, scenarios) {
+  const svg = $('chart');
+  const W = 800, H = 340;
+  const P = { top: 20, right: 20, bottom: 40, left: 70 };
+  const iw = W - P.left - P.right;
+  const ih = H - P.top - P.bottom;
+
+  // sample yearly to reduce points
+  const series = scenarios.map(s => {
+    const yearly = [];
+    for (let i = 0; i < s.sim.rows.length; i += 12) yearly.push(s.sim.rows[i]);
+    // ensure last point included
+    if (s.sim.rows.length && yearly[yearly.length - 1] !== s.sim.rows[s.sim.rows.length - 1]) {
+      yearly.push(s.sim.rows[s.sim.rows.length - 1]);
+    }
+    return { key: s.key, inp: s.inp, points: yearly };
+  });
+
+  const allPts = series.flatMap(s => s.points);
+  const maxAge = Math.max(...allPts.map(p => p.age));
+  const maxPl  = Math.max(...allPts.map(p => Math.max(0, p.plFinal)));
+  const minAge = idadeAtual;
+
+  const x = (age) => P.left + (age - minAge) / (maxAge - minAge) * iw;
+  const y = (pl)  => P.top + ih - Math.max(0, pl) / maxPl * ih;
+
+  const colors = { a: '#009E76', b: '#63C6A5', c: '#004031' };
+  const labels = { a: 'A', b: 'B', c: 'C' };
+
+  const gridLines = 5;
+  let gridSvg = '';
+  for (let i = 0; i <= gridLines; i++) {
+    const yPos = P.top + (ih / gridLines) * i;
+    const val = maxPl * (1 - i / gridLines);
+    gridSvg += `<line x1="${P.left}" y1="${yPos}" x2="${W - P.right}" y2="${yPos}" stroke="#D9E3E0" stroke-width="0.5"/>`;
+    gridSvg += `<text x="${P.left - 8}" y="${yPos + 4}" font-size="10" fill="#5a6b66" text-anchor="end" font-family="Manrope, sans-serif">${formatCompactBRL(val)}</text>`;
+  }
+
+  // X axis: age ticks every 10 years
+  let axisSvg = '';
+  const startAge = Math.ceil(minAge / 10) * 10;
+  for (let a = startAge; a <= maxAge; a += 10) {
+    const xPos = x(a);
+    axisSvg += `<line x1="${xPos}" y1="${P.top + ih}" x2="${xPos}" y2="${P.top + ih + 4}" stroke="#5a6b66" stroke-width="0.5"/>`;
+    axisSvg += `<text x="${xPos}" y="${P.top + ih + 18}" font-size="10" fill="#5a6b66" text-anchor="middle" font-family="Manrope, sans-serif">${a}</text>`;
+  }
+  // X axis label
+  axisSvg += `<text x="${P.left + iw/2}" y="${H - 6}" font-size="10" fill="#5a6b66" text-anchor="middle" font-family="Manrope, sans-serif" letter-spacing="0.1em">IDADE (ANOS)</text>`;
+
+  // Retirement lines (dashed)
+  let retireSvg = '';
+  series.forEach(s => {
+    const xR = x(s.inp.idadeRenda);
+    retireSvg += `<line x1="${xR}" y1="${P.top}" x2="${xR}" y2="${P.top + ih}" stroke="${colors[s.key]}" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>`;
+  });
+
+  // Series paths
+  let pathsSvg = '';
+  series.forEach(s => {
+    const d = s.points.map((p, i) => {
+      const cmd = i === 0 ? 'M' : 'L';
+      return `${cmd}${x(p.age).toFixed(1)},${y(p.plFinal).toFixed(1)}`;
+    }).join(' ');
+    pathsSvg += `<path d="${d}" fill="none" stroke="${colors[s.key]}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  });
+
+  // Axis frame
+  const frame = `
+    <line x1="${P.left}" y1="${P.top}" x2="${P.left}" y2="${P.top + ih}" stroke="#5a6b66" stroke-width="0.6"/>
+    <line x1="${P.left}" y1="${P.top + ih}" x2="${W - P.right}" y2="${P.top + ih}" stroke="#5a6b66" stroke-width="0.6"/>
+  `;
+
+  svg.innerHTML = gridSvg + retireSvg + pathsSvg + frame + axisSvg;
+}
+
+function formatCompactBRL(v) {
+  if (v >= 1e6) return 'R$ ' + (v / 1e6).toFixed(1).replace('.', ',') + 'M';
+  if (v >= 1e3) return 'R$ ' + (v / 1e3).toFixed(0) + 'k';
+  return 'R$ ' + Math.round(v);
+}
+
+// ─── SESSION ID ──────────────────────────────────────────────
+function getSessionId() {
+  const KEY = 'desexcel_session_id';
+  let id = sessionStorage.getItem(KEY);
+  if (!id) {
+    id = 'sx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    sessionStorage.setItem(KEY, id);
+  }
+  return id;
+}
+
+// ─── LOGGING via Google Apps Script ──────────────────────────
+async function logCalculation(payload) {
+  const cfg = window.DESEXCEL_CONFIG || {};
+  const url = cfg.LOGGER_URL;
+  if (!url || url.startsWith('COLE_AQUI')) return { ok: false, reason: 'not-configured' };
+  const flat = {
+    tool:      cfg.TOOL_ID || 'aposentadoria',
+    sessionId: getSessionId(),
+    timestamp: payload.timestamp,
+    idadeAtual: payload.idadeAtual
+  };
+  payload.scenarios.forEach(s => {
+    const k = s.key.toUpperCase();
+    flat[`${k}_idadeRenda`]  = s.inp.idadeRenda;
+    flat[`${k}_patrimonio`]  = s.inp.patrimonio;
+    flat[`${k}_aporte`]      = s.inp.aporte;
+    flat[`${k}_retirada`]    = s.inp.retirada;
+    flat[`${k}_retornoAno`]  = s.inp.retornoAno;
+    flat[`${k}_inflacaoAno`] = s.inp.inflacaoAno;
+    flat[`${k}_patRenda`]    = s.sim.patRenda;
+    flat[`${k}_zeragemAge`]  = s.sim.zeragemAge;
+  });
+  flat.userAgent = navigator.userAgent;
+  flat.lang      = navigator.language;
+  flat.origem    = location.href;
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(flat)
+    });
+    return { ok: true };
+  } catch (err) {
+    console.warn('[desexcel] falha ao registrar:', err);
+    return { ok: false, reason: 'network', error: err };
+  }
+}
+
+function showLogStatus(state) {
+  const el = $('logStatus');
+  if (!el) return;
+  el.className = 'log-status visible ' + state;
+  el.textContent = state === 'ok'   ? 'Cálculo registrado'
+                 : state === 'fail' ? 'Falha ao registrar (cálculo segue válido)'
+                 :                    '';
+  if (state === 'ok') setTimeout(() => el.classList.remove('visible'), 3500);
+}
+
+// ─── EXPORTAÇÃO PDF via jsPDF ────────────────────────────────
+function exportPdf() {
+  if (!lastPayload) return;
+  const btn = $('btnExportPdf');
+  btn.disabled = true;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<span>↻</span>Gerando PDF...';
+
+  try {
+    if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('jsPDF não carregou.');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+    const W = 210, H = 297, M = 14;
+    const C = {
+      verde:       [0, 158, 118],
+      verdeEsc:    [0, 64, 49],
+      verdeMto:    [0, 41, 30],
+      verdeClaro:  [99, 198, 165],
+      muted:       [90, 107, 102],
+      neutroVerde: [217, 227, 224],
+      neutroClaro: [242, 237, 237],
+      line:        [217, 227, 224],
+      warn:        [184, 92, 58]
+    };
+    const setText = ([r,g,b]) => pdf.setTextColor(r,g,b);
+    const setFill = ([r,g,b]) => pdf.setFillColor(r,g,b);
+    const setDraw = ([r,g,b]) => pdf.setDrawColor(r,g,b);
+
+    let y = M;
+
+    // HEADER
+    pdf.setFontSize(13);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('EQI', M, y);
+    const eqiW = pdf.getTextWidth('EQI ');
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeMto);
+    pdf.text('Research', M + eqiW, y);
+
+    pdf.setFontSize(8);
+    setText(C.muted);
+    const dataStr = 'SIMULAÇÃO · ' + new Date(lastPayload.timestamp).toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    pdf.text(dataStr, W - M, y, { align: 'right' });
+
+    y += 3;
+    setDraw(C.verde);
+    pdf.setLineWidth(0.6);
+    pdf.line(M, y, W - M, y);
+    y += 11;
+
+    // TÍTULO
+    pdf.setFontSize(22);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeMto);
+    pdf.text('Calculadora de Salário', M, y);
+    y += 8;
+    pdf.text('na Aposentadoria', M, y);
+    y += 6;
+    pdf.setFontSize(10);
+    setText(C.muted);
+    pdf.text('Simulação de três cenários de planejamento para viver de renda.', M, y);
+    y += 12;
+
+    // IDADE ATUAL
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('IDADE ATUAL', M, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verdeMto);
+    pdf.text(lastPayload.idadeAtual + ' anos', M, y);
+    y += 10;
+
+    // 3 CENÁRIOS
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('CENÁRIOS SIMULADOS', M, y);
+    y += 6;
+
+    const gap = 3;
+    const cardW = (W - 2*M - 2*gap) / 3;
+    const cardH = 82;
+    const cardY = y;
+
+    lastPayload.scenarios.forEach((s, i) => {
+      const x = M + i * (cardW + gap);
+      const { inp, sim, key } = s;
+      const nome = 'Cenário ' + key.toUpperCase();
+
+      setDraw(C.line);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(x, cardY, cardW, cardH, 1.5, 1.5, 'S');
+
+      // Header do card
+      setFill(C.verde);
+      pdf.rect(x, cardY, cardW, 8, 'F');
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      setText([255, 255, 255]);
+      pdf.text(nome.toUpperCase(), x + 3, cardY + 5.5);
+
+      let ly = cardY + 12;
+      const line = (label, value, isBig = false) => {
+        pdf.setFontSize(7);
+        pdf.setFont('helvetica', 'normal');
+        setText(C.muted);
+        pdf.text(label, x + 3, ly);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(isBig ? 11 : 8);
+        setText(C.verdeMto);
+        pdf.text(value, x + cardW - 3, ly + (isBig ? 1 : 0), { align: 'right' });
+        ly += isBig ? 8 : 5;
+      };
+
+      line('Idade de aposentar', inp.idadeRenda + ' anos');
+      line('Patrimônio hoje', fmtBRL(inp.patrimonio));
+      line('Aporte mensal', fmtBRL(inp.aporte));
+      line('Retirada mensal', fmtBRL(inp.retirada));
+      line('Retorno / Inflação', (inp.retornoAno * 100).toFixed(1) + '% / ' + (inp.inflacaoAno * 100).toFixed(1) + '%');
+
+      ly += 3;
+      setDraw(C.line);
+      pdf.setLineWidth(0.15);
+      pdf.line(x + 3, ly, x + cardW - 3, ly);
+      ly += 5;
+
+      // Destaques
+      pdf.setFontSize(6.5);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text('PATRIMÔNIO NA APOSENTADORIA', x + 3, ly);
+      ly += 4;
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'bold');
+      setText(C.verde);
+      pdf.text(fmtBRL(sim.patRenda), x + 3, ly);
+      ly += 6;
+
+      pdf.setFontSize(6.5);
+      pdf.setFont('helvetica', 'normal');
+      setText(C.muted);
+      pdf.text('SEU DINHEIRO ACABA AOS', x + 3, ly);
+      ly += 4;
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'bold');
+      if (sim.zeragemAge !== null) {
+        setText(C.warn);
+        pdf.text(Math.floor(sim.zeragemAge) + ' anos', x + 3, ly);
+      } else {
+        setText(C.verde);
+        pdf.text('Não zera', x + 3, ly);
+      }
+    });
+
+    y = cardY + cardH + 8;
+
+    // OBSERVAÇÕES
+    const notesH = 34;
+    setFill(C.neutroClaro);
+    pdf.rect(M, y, W - 2*M, notesH, 'F');
+    setFill(C.verde);
+    pdf.rect(M, y, 1.5, notesH, 'F');
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    setText(C.verde);
+    pdf.text('OBSERVAÇÕES', M + 5, y + 5);
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.verdeEsc);
+    const notes = [
+      'Simulação mensal do patrimônio até 100 anos ou até esgotar.',
+      'Aportes ocorrem até a idade de viver de renda; a partir dela, começam as retiradas.',
+      'A retirada mensal é corrigida pela inflação pessoal.',
+      'Retorno real = (1 + retorno) / (1 + inflação) - 1.',
+      'Não considera impostos, aportes irregulares, liquidez ou outros aspectos do planejamento.'
+    ];
+    notes.forEach((n, i) => pdf.text('• ' + n, M + 5, y + 11 + i * 4.5));
+    y += notesH + 6;
+
+    // FOOTER
+    setDraw(C.line);
+    pdf.setLineWidth(0.2);
+    pdf.line(M, y, W - M, y);
+    y += 5;
+    pdf.setFontSize(7);
+    pdf.setFont('helvetica', 'normal');
+    setText(C.muted);
+    pdf.text('© EQI · v1.0 2025 · SC <-> BR', M, y);
+    setText(C.verde);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('EQI RESEARCH', W - M, y, { align: 'right' });
+
+    pdf.save('eqi-calc-aposentadoria-' + new Date().toISOString().slice(0,10) + '.pdf');
+  } catch (err) {
+    console.error('[desexcel] falha PDF:', err);
+    alert('Não foi possível gerar o PDF. ' + (err.message || err));
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = orig;
+  }
+}
+
+// ─── ESTADO E EVENTOS ────────────────────────────────────────
+let lastPayload = null;
+
+$('btnCalcular').addEventListener('click', async () => {
+  lastPayload = calc();
+  document.body.classList.remove('results-hidden');
+  const hint = $('calcHint');
+  if (hint) hint.textContent = '↗ Recalcule sempre que ajustar as premissas';
+  $('btnCalcular').textContent = 'Recalcular ↗';
+  document.querySelector('.result-block').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  const result = await logCalculation(lastPayload);
+  if (result.ok)                          showLogStatus('ok');
+  else if (result.reason === 'network')   showLogStatus('fail');
+});
+
+$('btnExportPdf').addEventListener('click', exportPdf);
+</script>
+</body>
+</html>
