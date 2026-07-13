@@ -17,6 +17,11 @@ desexcel/
 ├── aposentadoria/
 │   ├── index.html                      ← calculadora de salário na aposentadoria
 │   └── config.js                       ← URL do logger
+├── comparadorrf/
+│   ├── index.html                      ← comparador de renda fixa
+│   └── config.js                       ← URL do logger
+├── rendafixa/
+│   └── index.html                      ← consolidador de carteira de renda fixa
 ├── SETUP_GOOGLE_SHEETS.md              ← passo a passo do backend de logs
 └── README.md
 ```
@@ -36,6 +41,11 @@ Compara a rentabilidade de um imóvel alugado com 3 opções de renda fixa (CDB 
 [`aposentadoria/`](./aposentadoria/)
 
 Simula três cenários de planejamento pra viver de renda. Projeção mensal do patrimônio até 100 anos, considerando aportes, retiradas corrigidas pela inflação e retorno real. Mostra o patrimônio na aposentadoria, quando o dinheiro acaba e a curva de evolução patrimonial.
+
+### 03. Comparador de Renda Fixa
+[`comparadorrf/`](./comparadorrf/)
+
+Compara a rentabilidade líquida de múltiplos títulos de renda fixa lado a lado. Suporta CDB, LCI, LCA, CRI, CRA, Debêntures (incentivadas e não), Bonds, LTN, NTN-B, LFT e Poupança, com indexadores Pré/Pós/IPCA+/CDI+/Dólar+. Aplica a tabela regressiva de IR e regras de isenção; usa projeções ano a ano de CDI, IPCA e Dólar. Ranking automático em % CDI líquido.
 
 **Recursos comuns:**
 - Botão "Calcular" — disparo explícito
