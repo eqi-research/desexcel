@@ -37,7 +37,7 @@ const VIVENDO_DE_RENDA_FIIS_DATA = {
    * Para remover um fundo: apague a linha inteira.
    */
   fiis: [
-    { nome: "Manatê Multiestratégia",        ticker: "MANA11", setor: "Multiestratégia", peso: 0.075, dy: 0.14042553191 },
+    { nome: "Manatí Multiestratégia",        ticker: "MANA11", setor: "Multiestratégia", peso: 0.075, dy: 0.14042553191 },
     { nome: "BTG CRI",                       ticker: "BTCI11", setor: "Papel",           peso: 0.10,  dy: 0.12298728813 },
     { nome: "BTG Logística",                 ticker: "BTLG11", setor: "Logística",       peso: 0.10,  dy: 0.091506756757 },
     { nome: "TRX Real Estate FII",           ticker: "TRXF11", setor: "Híbrido",         peso: 0.05,  dy: 0.13012340238 },
