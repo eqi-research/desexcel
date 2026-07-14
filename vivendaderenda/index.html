@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador Vivendo de Renda | EQI Research</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <div class="container">
+      <img src="assets/logo-eqi-research-white.png" alt="EQI Research">
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="hero">
+      <h1>Simulador Vivendo de Renda</h1>
+      <p>Descubra quanto você precisa investir hoje para receber a renda mensal que deseja, de acordo com o seu perfil de investidor.</p>
+      <span class="selo-atualizacao">Carteira recomendada — <span id="atualizacao"></span></span>
+    </section>
+
+    <section class="calculadora">
+      <div class="campo">
+        <label for="input-renda">Qual a renda mensal que você deseja receber?</label>
+        <div class="campo-moeda">
+          <span>R$</span>
+          <input type="text" id="input-renda" inputmode="decimal" value="10.000">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Qual o seu perfil de investidor?</label>
+        <div class="perfil-selector" role="group" aria-label="Perfil de investidor">
+          <button type="button" class="perfil-botao" data-perfil="Conservador" aria-pressed="false">Conservador</button>
+          <button type="button" class="perfil-botao" data-perfil="Moderado" aria-pressed="false">Moderado</button>
+          <button type="button" class="perfil-botao" data-perfil="Agressivo" aria-pressed="false">Agressivo</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="aviso-soma" id="aviso-soma" hidden></p>
+
+    <section class="stats">
+      <div class="stat-tile destaque">
+        <p class="stat-label">Capital necessário</p>
+        <p class="stat-valor" id="stat-capital">—</p>
+      </div>
+      <div class="stat-tile">
+        <p class="stat-label">Yield médio da carteira (a.a.)</p>
+        <p class="stat-valor" id="stat-yield">—</p>
+      </div>
+      <div class="stat-tile">
+        <p class="stat-label">Renda mensal simulada</p>
+        <p class="stat-valor" id="stat-renda">—</p>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>Distribuição por classe de ativo</h2>
+      <div class="barra-classes" id="barra-classes"></div>
+      <ul class="legenda-classes" id="legenda-classes"></ul>
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Classe</th>
+              <th class="col-numero">%</th>
+              <th class="col-numero">Em R$</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-classes-corpo"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>Distribuição por ativo recomendado</h2>
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Ativo</th>
+              <th class="col-numero">%</th>
+              <th class="col-numero">Em R$</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-ativos-corpo"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <details class="disclaimer">
+      <summary>Exoneração de responsabilidade</summary>
+      <p>Este relatório foi produzido pela EQI Investimentos Corretora de Títulos e Valores Mobiliários S.A. (“EQI Investimentos”). O conteúdo dos relatórios não pode ser reproduzido, publicado, copiado, divulgado, distribuído, resumido, extraído ou de outra forma referenciado, no todo ou em parte, sem o consentimento prévio e expresso da EQI Research. Nossas análises são baseadas em informações obtidas junto a fontes públicas que consideramos confiáveis na data de publicação, dentre outras fontes. Na medida em que as opiniões nascem de julgamentos e estimativas, estão naturalmente sujeitas a mudanças. O conteúdo dos relatórios é gerado consoante as condições econômicas, de mercado, entre outras, disponíveis na data de sua publicação, de modo que as conclusões apresentadas estão sujeitas a variações em virtude de uma gama de fatores sobre os quais a EQI Research não tem qualquer controle. Cada relatório somente é válido na sua respectiva data, sendo que eventos futuros podem prejudicar suas conclusões. Rentabilidade obtida no passado não representa garantia de rentabilidade futura. A EQI Research busca, mas não assume nenhuma responsabilidade em atualizar, revisar, retificar ou anular tais relatórios em virtude de qualquer acontecimento futuro.</p>
+      <p>Nossos relatórios possuem caráter informativo e não representam oferta de negociação de valores mobiliários ou outros instrumentos financeiros em qualquer jurisdição. As análises, informações e estratégias de investimento têm como único propósito fomentar o debate entre os analistas da EQI Research e os seus clientes. A EQI Research ressalta que os relatórios não incluem aconselhamentos de qualquer natureza, como legal ou contábil. O conteúdo dos relatórios não é e nem deve ser considerado como promessa ou garantia com relação ao passado ou ao futuro, nem como recomendação para qualquer fim. Cada cliente deve, portanto, desenvolver suas próprias análises e estratégias.</p>
+      <p>As informações disponibilizadas no conteúdo deste relatório não possuem relação com objetivos específicos de investimentos, situação financeira ou necessidade particular de qualquer destinatário específico, não devendo servir como única fonte de informações no processo decisório do investidor que, antes de decidir, deverá realizar, preferencialmente com a ajuda de um profissional devidamente qualificado, uma avaliação minuciosa do produto e respectivos riscos face a seus objetivos pessoais e à sua tolerância a risco. Portanto, nada neste relatório constitui indicação de que a estratégia de investimento ou potenciais recomendações citadas são adequadas ao perfil do destinatário ou apropriadas às circunstâncias individuais do destinatário e tampouco constituem uma recomendação pessoal.</p>
+      <p>Os produtos e serviços mencionados nos relatórios podem não estar disponíveis em todas as jurisdições ou para determinadas categorias de investidores. Adicionalmente, a legislação e regulamentação de proteção a investidores de determinadas jurisdições podem não se aplicar a produtos e serviços registrados em outras jurisdições, sujeitos à legislação e regulamentação aplicável, além de previsões contratuais específicas. O recebimento do conteúdo dos relatórios não faz com que você esteja automaticamente enquadrado em determinadas categorias de investimento necessárias para a aplicação em alguns produtos e serviços. A verificação do perfil de investimento de cada investidor deverá, portanto, sempre prevalecer na checagem dos produtos e serviços aptos a integrarem sua carteira de investimentos, sendo certo que nos reservamos ao direito de eventualmente recusarmos determinadas operações que não sejam compatíveis com o seu perfil de investimento.</p>
+      <p>A EQI Research ou empresas a nós ligadas mantém, ou tem a intenção de manter, relações comerciais com determinadas companhias cobertas nos relatórios. Por esta razão, os clientes devem estar cientes de eventuais conflitos de interesses que potencialmente possam afetar os objetivos dos relatórios. Os clientes devem considerar os relatórios apenas como mais um fator no eventual processo de tomada de decisão de seus investimentos.</p>
+      <p>A EQI Research confia no uso de barreiras de informação para controlar o fluxo de informação contida em uma ou mais áreas dentro da EQI Research, em outras áreas, unidades, grupos e filiadas. A remuneração do analista responsável pelo relatório é determinada pela direção da EQI Research e pelos diretores seniores da EQI Research.</p>
+      <p>A EQI Research não se responsabiliza assim como não garante que os investidores irão obter lucros. A EQI Research tampouco irá dividir qualquer ganho de investimentos com os investidores assim como não irá aceitar qualquer passivo causado por perdas. Os investimentos envolvem riscos e os investidores devem ter prudência ao tomar suas decisões de investimento. A EQI Research não tem obrigações fiduciárias com os destinatários dos relatórios e, ao divulgá-los, não apresenta capacidade fiduciária.</p>
+      <p>A EQI Research, suas empresas afiliadas, subsidiárias, seus funcionários, diretores e agentes não se responsabilizam e não aceitam nenhum passivo oriundo de perda ou prejuízo eventualmente provocado pelo uso de parte ou da integralidade do conteúdo dos relatórios.</p>
+      <p><strong>Certificação dos analistas:</strong> cada analista da área de Análise &amp; Research primariamente responsável pelo conteúdo desse relatório de investimentos, total ou em parte, certifica que: i) todos os pontos de vista expressos refletem suas opiniões e pontos de vista pessoais sobre as ações e seus emissores e tais recomendações foram elaboradas de maneira independente, inclusive em relação a EQI Research e/ou suas afiliadas, conforme o caso; ii) nenhuma parte de sua remuneração foi, é ou será, direta ou indiretamente, relacionada a quaisquer recomendações ou opiniões específicas aqui contidas ou relacionadas ao preço de qualquer valor mobiliário discutido neste relatório.</p>
+      <p>Parte da remuneração do analista é proveniente dos lucros da EQI Research como um todo e/ou de suas afiliadas e, consequentemente, das receitas oriundas de transações realizadas pela EQI Research e/ou suas afiliadas.</p>
+      <p>Quando aplicável, o analista responsável por este relatório e certificado de acordo com as normas brasileiras será identificado em negrito na primeira página deste relatório e será o primeiro nome na lista de assinaturas.</p>
+    </details>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+/**
+ * ==========================================================================
+ *  SIMULADOR VIVENDO DE RENDA — ESTILO
+ * ==========================================================================
+ *  Cores e fonte extraídas do guia de marca EQI. Os hex abaixo foram
+ *  estimados visualmente a partir das imagens do guia — se você tiver a
+ *  página do PDF com os códigos oficiais, é só trocar os valores em
+ *  ":root" abaixo (nada mais no arquivo precisa mudar).
+ * ==========================================================================
+ */
+
+@font-face {
+  font-family: "Aeonik";
+  src: url("assets/fonts/aeonik-regular.woff2") format("woff2"),
+       url("assets/fonts/aeonik-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("assets/fonts/aeonik-medium.woff2") format("woff2"),
+       url("assets/fonts/aeonik-medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("assets/fonts/aeonik-semibold.woff2") format("woff2"),
+       url("assets/fonts/aeonik-semibold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("assets/fonts/aeonik-bold.woff2") format("woff2"),
+       url("assets/fonts/aeonik-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url("assets/fonts/aeonik-black.woff2") format("woff2"),
+       url("assets/fonts/aeonik-black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---- paleta institucional EQI (hex oficial do guia de marca) ---- */
+  --cor-offwhite: #f2eded;
+  --cor-card: #ffffff;
+  --cor-verde-institucional: #00291e;   /* fundo escuro / marca sobre off-white */
+  --cor-verde-institucional-escuro: #001a12;
+  --cor-verde-texto: #00291e;           /* texto principal sobre off-white */
+  --cor-verde-texto-suave: #476059;     /* texto secundário (institucional + neutro) */
+  --cor-accent: #009e76;                /* verde médio — interação/CTA */
+  --cor-accent-hover: #007a5b;
+  --cor-mint: #63c6a5;                  /* verde claro — destaques suaves */
+  --cor-borda: #d9e3e0;
+
+  /* ---- paleta categórica (classes de ativo) — validada CVD-safe ----
+     slot 0 usa o verde institucional da marca; slots 1-3 são cores de apoio
+     escolhidas só para diferenciar categorias num gráfico (a marca EQI só
+     pode usar off-white/verde institucional no LOGO, mas um gráfico de dados
+     precisa de cores distintas por categoria — por isso os outros 3 slots
+     não são tons de verde). */
+  --cor-classe-0: #009e76; /* Renda Fixa */
+  --cor-classe-1: #a9720f; /* FIIs */
+  --cor-classe-2: #2f5ea0; /* FI-Infras */
+  --cor-classe-3: #b5451f; /* Ações */
+
+  --cor-aviso-bg: #fdf1de;
+  --cor-aviso-texto: #7a4a0a;
+  --cor-aviso-borda: #e8b165;
+
+  --raio: 14px;
+  --sombra: 0 1px 2px rgba(15, 42, 32, 0.06), 0 8px 24px rgba(15, 42, 32, 0.07);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Aeonik", "Inter", system-ui, sans-serif;
+  background: var(--cor-offwhite);
+  color: var(--cor-verde-texto);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---- header ------------------------------------------------------------ */
+
+.cabecalho {
+  background: var(--cor-verde-institucional);
+  padding: 18px 0;
+}
+
+.cabecalho .container {
+  display: flex;
+  align-items: center;
+}
+
+.cabecalho img {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+/* ---- hero ---------------------------------------------------------------- */
+
+.hero {
+  padding: 48px 0 8px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-family: "Aeonik", sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--cor-verde-institucional);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.hero p {
+  font-size: 16px;
+  color: var(--cor-verde-texto-suave);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.selo-atualizacao {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-verde-texto-suave);
+}
+
+/* ---- card da calculadora ------------------------------------------------ */
+
+.calculadora {
+  background: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 28px;
+  margin: 32px 0;
+}
+
+.campo {
+  margin-bottom: 22px;
+}
+
+.campo:last-child {
+  margin-bottom: 0;
+}
+
+.campo label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--cor-verde-institucional);
+  margin-bottom: 10px;
+}
+
+.campo-moeda {
+  position: relative;
+  max-width: 320px;
+}
+
+.campo-moeda span {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 600;
+  color: var(--cor-verde-texto-suave);
+}
+
+.campo-moeda input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--cor-verde-institucional);
+  padding: 12px 16px 12px 42px;
+  border-radius: 10px;
+  border: 1.5px solid var(--cor-borda);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.campo-moeda input:focus {
+  border-color: var(--cor-accent);
+}
+
+.perfil-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.perfil-botao {
+  flex: 1 1 140px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--cor-borda);
+  background: #fff;
+  color: var(--cor-verde-texto);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.perfil-botao:hover {
+  border-color: var(--cor-accent);
+  background: rgba(99, 198, 165, 0.12); /* --cor-mint a 12% */
+}
+
+.perfil-botao.is-ativo {
+  background: var(--cor-verde-institucional);
+  border-color: var(--cor-verde-institucional);
+  color: var(--cor-offwhite);
+}
+
+/* ---- aviso interno (soma dos pesos) ------------------------------------- */
+
+.aviso-soma {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--cor-aviso-bg);
+  border: 1px solid var(--cor-aviso-borda);
+  color: var(--cor-aviso-texto);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ---- estatísticas -------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.stat-tile {
+  background: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 20px;
+  text-align: left;
+}
+
+.stat-tile.destaque {
+  background: var(--cor-verde-institucional);
+  border-color: var(--cor-verde-institucional);
+  color: var(--cor-offwhite);
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-verde-texto-suave);
+  margin: 0 0 6px;
+}
+
+.stat-tile.destaque .stat-label {
+  color: #b9d6ca;
+}
+
+.stat-valor {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: proportional-nums;
+  margin: 0;
+  color: var(--cor-verde-institucional);
+}
+
+.stat-tile.destaque .stat-valor {
+  color: #fff;
+  font-size: 32px;
+}
+
+/* ---- seções de distribuição ---------------------------------------------- */
+
+.secao {
+  margin-bottom: 36px;
+}
+
+.secao h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cor-verde-institucional);
+  margin: 0 0 16px;
+}
+
+.barra-classes {
+  display: flex;
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--cor-borda);
+  margin-bottom: 16px;
+}
+
+.barra-segmento {
+  height: 100%;
+  background: var(--cor-classe);
+  border-right: 2px solid var(--cor-card);
+}
+
+.barra-segmento:last-child {
+  border-right: none;
+}
+
+.legenda-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.legenda-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--cor-classe);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.legenda-nome {
+  color: var(--cor-verde-texto);
+  font-weight: 500;
+}
+
+.legenda-valor {
+  color: var(--cor-verde-texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--cor-verde-texto-suave);
+  padding: 0 12px 8px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--cor-borda);
+  font-variant-numeric: tabular-nums;
+}
+
+td.col-numero, th.col-numero {
+  text-align: right;
+}
+
+td.col-ativo {
+  padding-left: 30px;
+  font-variant-numeric: initial;
+}
+
+tr.linha-grupo td {
+  font-weight: 700;
+  color: var(--cor-verde-institucional);
+  background: var(--cor-offwhite);
+  padding-left: 12px;
+}
+
+.legenda-swatch + * {
+  margin-left: 2px;
+}
+
+tr.linha-grupo .legenda-swatch,
+td:first-child .legenda-swatch {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.tabela-scroll {
+  overflow-x: auto;
+  background: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 8px 8px 0;
+}
+
+/* ---- disclaimer ----------------------------------------------------------- */
+
+.disclaimer {
+  margin: 40px 0 60px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--cor-verde-texto-suave);
+}
+
+.disclaimer summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-verde-institucional);
+  margin-bottom: 10px;
+}
+
+.disclaimer p {
+  margin: 0 0 10px;
+}
+
+/* ---- responsivo ------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+  .calculadora {
+    padding: 20px;
+  }
+  td.col-ativo {
+    padding-left: 20px;
+  }
+}
